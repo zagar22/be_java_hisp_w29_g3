@@ -1,6 +1,8 @@
 package com.bootcamp.be_java_hisp_w29_g3.util;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.ProductDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.BasicPostResponseDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.FullPostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostByUserDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
@@ -12,12 +14,17 @@ import java.util.List;
 
 public class PostMapperUtil {
 
-    public static PostResponseDto mapToPostResponseDto(Post post, ObjectMapper objectMapper) {
 
-        PostResponseDto response = objectMapper.convertValue(post, PostResponseDto.class);
-
+    public static PostResponseDto mapToFullPostResponseDto(Post post, ObjectMapper objectMapper) {
+        FullPostResponseDto response = objectMapper.convertValue(post, FullPostResponseDto.class);
         response.setPost_id(post.getId());
+        return response;
+    }
 
+
+    public static PostResponseDto mapToBasicPostResponseDto(Post post, ObjectMapper objectMapper) {
+        BasicPostResponseDto response = objectMapper.convertValue(post, BasicPostResponseDto.class);
+        response.setPost_id(post.getId());
         return response;
     }
 
