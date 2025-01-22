@@ -19,4 +19,5 @@ public interface IUserRepository {
     Post addPostToSeller(Integer userId, Post newPost);
     List<Buyer> getBuyersFollowingSeller(Integer sellerId);
     Seller getSellerById(Integer id);
+    List<Seller> getFollowers(int sellerId, String order);
 }

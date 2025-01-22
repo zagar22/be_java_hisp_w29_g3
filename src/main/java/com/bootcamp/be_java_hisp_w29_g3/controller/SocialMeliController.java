@@ -5,6 +5,7 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UserFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SocialMeliController {
@@ -53,5 +55,10 @@ public class SocialMeliController {
     @PostMapping("/products/post")
     public ResponseEntity<PostResponseDto> postPost(@RequestBody PostRequestDto post) {
         return new ResponseEntity<>(socialMeliService.createPost(post), HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/followers/list")
+    public ResponseEntity<UserFollowersDTO> getFollowers(@PathVariable int userId, @RequestParam(required = false, defaultValue = "") String order) {
+        return ResponseEntity.ok(socialMeliService.getFollowers(userId, order));
     }
 }
