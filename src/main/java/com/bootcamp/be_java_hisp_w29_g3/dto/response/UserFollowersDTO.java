@@ -1,5 +1,6 @@
-package com.bootcamp.be_java_hisp_w29_g3.dto;
+package com.bootcamp.be_java_hisp_w29_g3.dto.response;
 
+import com.bootcamp.be_java_hisp_w29_g3.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

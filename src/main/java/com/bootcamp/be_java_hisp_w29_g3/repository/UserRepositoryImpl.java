@@ -172,15 +172,11 @@ public class UserRepositoryImpl implements IUserRepository{
     }
 
     @Override
-    public List<Seller> getFollowers(int sellerId, String order) {
-        if (!sellers.containsKey(sellerId)) {
-            throw new IllegalArgumentException("El vendedor con ID: " + sellerId + " no existe.");
-        }
-
+    public List<Buyer> getFollowers(int sellerId, String order) {
         List<Buyer> followers = buyers.values().stream()
-                                      .filter(buyer -> buyer.getSellers().stream()
-                                      .anyMatch(seller -> seller.getId() == sellerId))
-                                      .collect(Collectors.toCollection(ArrayList::new));
+                .filter(buyer -> buyer.getSellers().stream()
+                .anyMatch(seller -> seller.getId() == sellerId))
+                .collect(Collectors.toCollection(ArrayList::new));
 
         if ("name_asc".equalsIgnoreCase(order)) {
             followers.sort(Comparator.comparing(Buyer::getName));
@@ -188,12 +184,6 @@ public class UserRepositoryImpl implements IUserRepository{
             followers.sort(Comparator.comparing(Buyer::getName).reversed());
         }
 
-        return followers.stream()
-                        .map(buyer -> Seller.builder()
-                                .id(buyer.getId())
-                                .name(buyer.getName())
-                                .posts(new ArrayList<>())
-                                .build())
-                        .collect(Collectors.toList());
+        return followers;
     }
 }

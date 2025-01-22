@@ -1,11 +1,11 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
-import com.bootcamp.be_java_hisp_w29_g3.dto.*;
+import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UserDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.SellerFollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
@@ -136,9 +136,8 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
             throw new IllegalArgumentException("El parámetro 'order' debe ser 'name_asc', 'name_desc' o estar vacío.");
         }
 
-        List<UserDTO> followers = userRepository.getFollowers(sellerId, order)
-                                                .stream()
-                                                .map(seller -> new UserDTO(seller.getId(), seller.getName()))
+        List<UserDTO> followers = userRepository.getFollowers(sellerId, order).stream()
+                                                .map(buyer -> new UserDTO(buyer.getId(), buyer.getName()))
                                                 .collect(Collectors.toList());
 
         return new UserFollowersDTO(sellerId, followers);
