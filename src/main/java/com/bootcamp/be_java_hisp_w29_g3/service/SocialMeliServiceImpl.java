@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
@@ -66,6 +67,16 @@ public class SocialMeliServiceImpl  implements ISocialMeliService{
         }else{
             throw new BadRequestException("No existe el vendedor");
         }
+    }
+
+    @Override
+    public FollowerCountDTO calculateSellerFollowerCount(Integer sellerId) {
+        if (! userRepository.existsSellerById(sellerId)){
+            throw new BadRequestException("No existe el vendedor");
+        }
+        return new FollowerCountDTO(sellerId,
+                userRepository.getSellerById(sellerId).getName(),
+                userRepository.getBuyersFollowingSeller(sellerId).stream().count());
     }
 
 }
