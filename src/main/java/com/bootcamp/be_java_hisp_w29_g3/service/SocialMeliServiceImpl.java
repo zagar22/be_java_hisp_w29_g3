@@ -12,7 +12,6 @@ import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w29_g3.util.JacksonUtil;
 import com.bootcamp.be_java_hisp_w29_g3.util.PostMapperUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -163,9 +162,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         if(posts.isEmpty())
             throw new NotFoundException("No hay posts para mostrar");
 
-        List<PostByUserDto> postsDto = posts.stream()
-                .map(post -> PostMapperUtil.mapToPostByUserResponseDto(post, userId, mapper)).toList();
-
+        List<PostByUserDto> postsDto = PostMapperUtil.mapToPostByUserResponseDto(posts, userId);
         return new PostsByUserResponseDto(userId, postsDto);
     }
 
