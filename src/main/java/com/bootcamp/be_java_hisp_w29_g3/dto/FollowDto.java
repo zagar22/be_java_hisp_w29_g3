@@ -1,9 +1,9 @@
 package com.bootcamp.be_java_hisp_w29_g3.dto;
 
-public class ExceptionDto {
+public class FollowDto {
     private String message;
 
-    public ExceptionDto(String message) {
+    public FollowDto(String message) {
         this.message = message;
     }
 

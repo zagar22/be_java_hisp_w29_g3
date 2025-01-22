@@ -12,18 +12,15 @@ import java.util.Map;
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
     private Map<Integer,Seller> sellers = new HashMap<>();
-    private Map<Integer,Buyer> buyers = new HashMap();
+    private Map<Integer,Buyer> buyers = new HashMap<>();
 
     public UserRepositoryImpl(){
          loadDB();
-
     }
 
     public Map<Integer,Seller> getAll(){
         return sellers;
     }
-
-
 
     private void loadDB(){
         // Crear productos de prueba
@@ -70,5 +67,28 @@ public class UserRepositoryImpl implements IUserRepository{
         buyers.put(buyer1.getId(), buyer1);
         buyers.put(buyer2.getId(), buyer2);
 
+    }
+
+    @Override
+    public void followSeller(int userId, int userIdToFollow) {
+        buyers.get(userId).getSellers().add(sellers.get(userIdToFollow));
+    }
+
+    //Verifico si existe el vendedor
+    @Override
+    public boolean existsSellerById(int userIdToFollow){
+        return sellers.containsKey(userIdToFollow);
+    }
+
+    //Verifico si existe el comprador
+    @Override
+    public boolean existsBuyerById(int userId){
+        return buyers.containsKey(userId);
+    }
+
+    //Verifico si el comprador ya seguia al vendedor
+    @Override
+    public boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow){
+        return buyers.get(userId).getSellers().stream().anyMatch(seller -> seller.getId() == userIdToFollow);
     }
 }
