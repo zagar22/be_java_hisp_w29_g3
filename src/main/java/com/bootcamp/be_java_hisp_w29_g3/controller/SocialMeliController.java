@@ -29,4 +29,9 @@ public class SocialMeliController {
     public ResponseEntity<?> followSeller(@PathVariable int userId, @PathVariable int userIdToFollow){
         return new ResponseEntity<>(socialMeliService.followSeller(userId,userIdToFollow),HttpStatus.OK);
     }
+
+    @PostMapping("/users/{userId}/unfollow/{userIdToUnfollow}")
+    public ResponseEntity<?> unFollowSeller(@PathVariable int userId, @PathVariable int userIdToUnfollow){
+        return new ResponseEntity<>(socialMeliService.unfollowSeller(userId,userIdToUnfollow),HttpStatus.OK);
+    }
 }

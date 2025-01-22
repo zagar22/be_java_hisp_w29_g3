@@ -74,6 +74,11 @@ public class UserRepositoryImpl implements IUserRepository{
         buyers.get(userId).getSellers().add(sellers.get(userIdToFollow));
     }
 
+    @Override
+    public void unfollowSeller(int userId, int userIdToUnfollow) {
+        buyers.get(userId).getSellers().remove(sellers.get(userIdToUnfollow));
+    }
+
     //Verifico si existe el vendedor
     @Override
     public boolean existsSellerById(int userIdToFollow){

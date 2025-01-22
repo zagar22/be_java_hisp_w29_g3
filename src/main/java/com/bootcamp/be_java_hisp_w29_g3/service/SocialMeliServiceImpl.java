@@ -44,4 +44,27 @@ public class SocialMeliServiceImpl  implements ISocialMeliService{
         }
     }
 
+    @Override
+    public FollowDto unfollowSeller(int userId, int userIdToUnfollow) {
+        //Verifico existencia de vendedor
+        if(userRepository.existsSellerById(userIdToUnfollow)){
+            //Verifico existencia de comprador
+            if(userRepository.existsBuyerById(userId)){
+                //Verifico si ya se siguen
+                if(!userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnfollow)){
+                    userRepository.unfollowSeller(userId,userIdToUnfollow);
+                    return new FollowDto("El usuario ya no sigue al vendedor");
+                }else{
+                    throw new BadRequestException("El usuario no sigue al vendedor");
+                }
+
+            }else{
+                throw new BadRequestException("No existe el usuario");
+            }
+
+        }else{
+            throw new BadRequestException("No existe el vendedor");
+        }
+    }
+
 }
