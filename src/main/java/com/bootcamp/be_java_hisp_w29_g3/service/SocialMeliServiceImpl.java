@@ -7,8 +7,11 @@ import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
+import com.bootcamp.be_java_hisp_w29_g3.util.JacksonUtil;
+import com.bootcamp.be_java_hisp_w29_g3.util.PostMapperUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class SocialMeliServiceImpl implements ISocialMeliService {
     private final IUserRepository userRepository;
     private final IPostRepository postRepository;
-    private final ObjectMapper mapper;
+    private final ObjectMapper mapper = JacksonUtil.createObjectMapper();
 
 
     @Override
@@ -87,8 +90,6 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         newPost.setId(postNewId);
         Post createdPost = userRepository.addPostToSeller(userId, newPost);
         postRepository.addPost(newPost);
-        PostResponseDto response = mapper.convertValue(createdPost, PostResponseDto.class);
-        response.setPost_id(createdPost.getId());
-        return response;
+        return PostMapperUtil.mapToPostResponseDto(createdPost, mapper);
     }
 }
