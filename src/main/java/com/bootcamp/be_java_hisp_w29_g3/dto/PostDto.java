@@ -2,10 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g3.dto;
 
 
 import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

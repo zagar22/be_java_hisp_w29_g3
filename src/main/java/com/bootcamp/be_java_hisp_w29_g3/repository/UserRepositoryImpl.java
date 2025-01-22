@@ -1,10 +1,14 @@
 package com.bootcamp.be_java_hisp_w29_g3.repository;
 
-import com.bootcamp.be_java_hisp_w29_g3.entity.*;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
@@ -79,6 +83,9 @@ public class UserRepositoryImpl implements IUserRepository{
         List<Seller> sellersBuyer2 = new ArrayList<>();
         sellersBuyer2.add(sellerB);  // Comprador 2 compra a Vendedor B
 
+        List<Seller> sellersBuyer3 = new ArrayList<>();
+        sellersBuyer3.add(sellerA);
+
         // Crear compradores
         // Buyer buyer1 = new Buyer(1, "Comprador X", sellersBuyer1);
         // Buyer buyer2 = new Buyer(2, "Comprador Y", sellersBuyer2);
@@ -95,10 +102,16 @@ public class UserRepositoryImpl implements IUserRepository{
                 .sellers(sellersBuyer2)
                 .build();
 
+        Buyer buyer3 = Buyer.builder()
+                .id(3)
+                .name("Comprador Z")
+                .sellers(sellersBuyer3)
+                .build();
+
         // Añadir compradores al mapa
         buyers.put(buyer1.getId(), buyer1);
         buyers.put(buyer2.getId(), buyer2);
-
+        buyers.put(buyer3.getId(), buyer3);
     }
 
     @Override
@@ -140,5 +153,31 @@ public class UserRepositoryImpl implements IUserRepository{
     @Override
     public Seller getSellerById(Integer id) {
         return sellers.get(id);
+    }
+
+    @Override
+    public List<Seller> getFollowers(int sellerId, String order) {
+        if (!sellers.containsKey(sellerId)) {
+            throw new IllegalArgumentException("El vendedor con ID: " + sellerId + " no existe.");
+        }
+
+        List<Buyer> followers = buyers.values().stream()
+                                      .filter(buyer -> buyer.getSellers().stream()
+                                      .anyMatch(seller -> seller.getId() == sellerId))
+                                      .collect(Collectors.toCollection(ArrayList::new));
+
+        if ("name_asc".equalsIgnoreCase(order)) {
+            followers.sort(Comparator.comparing(Buyer::getName));
+        } else if ("name_desc".equalsIgnoreCase(order)) {
+            followers.sort(Comparator.comparing(Buyer::getName).reversed());
+        }
+
+        return followers.stream()
+                        .map(buyer -> Seller.builder()
+                                .id(buyer.getId())
+                                .name(buyer.getName())
+                                .posts(new ArrayList<>())
+                                .build())
+                        .collect(Collectors.toList());
     }
 }

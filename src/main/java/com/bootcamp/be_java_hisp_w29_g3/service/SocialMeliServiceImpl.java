@@ -2,6 +2,8 @@ package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UserDTO;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UserFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
@@ -15,6 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -90,5 +95,21 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         Post createdPost = userRepository.addPostToSeller(userId, newPost);
         postRepository.addPost(newPost);
         return PostMapperUtil.mapToPostResponseDto(createdPost, mapper);
+    }
+    public UserFollowersDTO getFollowers(int sellerId, String order) {
+        if (!userRepository.existsSellerById(sellerId)) {
+            throw new IllegalArgumentException("El vendedor con ID " + sellerId + " no existe.");
+        }
+
+        if (!order.isEmpty() && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
+            throw new IllegalArgumentException("El parámetro 'order' debe ser 'name_asc', 'name_desc' o estar vacío.");
+        }
+
+        List<UserDTO> followers = userRepository.getFollowers(sellerId, order)
+                                                .stream()
+                                                .map(seller -> new UserDTO(seller.getId(), seller.getName()))
+                                                .collect(Collectors.toList());
+
+        return new UserFollowersDTO(sellerId, followers);
     }
 }
