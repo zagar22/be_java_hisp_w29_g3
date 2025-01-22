@@ -4,6 +4,7 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
 
@@ -50,7 +51,7 @@ public class SocialMeliController {
     }
 
     @PostMapping("/products/post")
-    public ResponseEntity<?> postPost(@RequestBody PostRequestDto post) {
+    public ResponseEntity<PostResponseDto> postPost(@RequestBody PostRequestDto post) {
         return new ResponseEntity<>(socialMeliService.createPost(post), HttpStatus.OK);
     }
 }

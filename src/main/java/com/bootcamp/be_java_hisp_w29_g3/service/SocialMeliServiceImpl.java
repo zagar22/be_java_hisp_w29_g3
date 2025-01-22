@@ -2,9 +2,8 @@ package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
-import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
