@@ -19,6 +19,16 @@ public class UserRepositoryImpl implements IUserRepository{
         return sellers;
     }
 
+    @Override
+    public Post addPostToSeller(Integer userId, Post newPost) {
+        Seller seller = sellers.get(userId);
+        List<Post> currentPosts = seller.getPosts();
+        currentPosts.add(newPost);
+        seller.setPosts(currentPosts);
+        return newPost;
+    }
+
+
     private void loadDB(){
         // Crear productos de prueba
         Product product1 = new Product(1, "Laptop Dell", "Electrónica", "Dell", "Negro", "Laptop de alta gama");

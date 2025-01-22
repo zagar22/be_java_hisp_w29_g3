@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g3.repository;
 
+import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 
@@ -14,6 +15,8 @@ public interface IUserRepository {
     boolean existsSellerById(int userIdToFollow);
     boolean existsBuyerById(int userId);
     boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow);
+
+    Post addPostToSeller(Integer userId, Post newPost);
     List<Buyer> getBuyersFollowingSeller(Integer sellerId);
     Seller getSellerById(Integer id);
 }
