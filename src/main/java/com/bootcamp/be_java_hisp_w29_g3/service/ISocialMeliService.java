@@ -3,11 +3,11 @@ package com.bootcamp.be_java_hisp_w29_g3.service;
 import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.UserFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.UserFollowersDTO;
 import org.springframework.web.bind.annotation.PathVariable;
 
 public interface ISocialMeliService {
