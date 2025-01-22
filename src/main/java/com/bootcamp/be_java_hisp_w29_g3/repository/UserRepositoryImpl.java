@@ -45,8 +45,21 @@ public class UserRepositoryImpl implements IUserRepository{
         postsSellerB.add(post4);
 
         // Crear vendedores
-        Seller sellerA = new Seller(1, "Vendedor A", postsSellerA);
-        Seller sellerB = new Seller(2, "Vendedor B", postsSellerB);
+        // Seller sellerA = new Seller(1, "Vendedor A", postsSellerA);
+        // Seller sellerB = new Seller(2, "Vendedor B", postsSellerB);
+
+
+        Seller sellerA = Seller.builder()
+                .id(1)
+                .name("Vendedor A")
+                .posts(postsSellerA)
+                .build();
+
+        Seller sellerB = Seller.builder()
+                .id(2)
+                .name("Vendedor B")
+                .posts(postsSellerB)
+                .build();
 
         // Añadir vendedores al mapa
         sellers.put(sellerA.getId(), sellerA);
@@ -60,8 +73,20 @@ public class UserRepositoryImpl implements IUserRepository{
         sellersBuyer2.add(sellerB);  // Comprador 2 compra a Vendedor B
 
         // Crear compradores
-        Buyer buyer1 = new Buyer(1, "Comprador X", sellersBuyer1);
-        Buyer buyer2 = new Buyer(2, "Comprador Y", sellersBuyer2);
+        // Buyer buyer1 = new Buyer(1, "Comprador X", sellersBuyer1);
+        // Buyer buyer2 = new Buyer(2, "Comprador Y", sellersBuyer2);
+
+        var buyer1 = Buyer.builder()
+                .id(1)
+                .name("Comprador X")
+                .sellers(sellersBuyer1)
+                .build();
+
+        var buyer2 = Buyer.builder()
+                .id(2)
+                .name("Comprador Y")
+                .sellers(sellersBuyer2)
+                .build();
 
         // Añadir compradores al mapa
         buyers.put(buyer1.getId(), buyer1);
