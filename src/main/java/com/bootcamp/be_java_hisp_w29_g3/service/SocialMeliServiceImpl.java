@@ -4,24 +4,24 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @Data
-public class SocialMeliServiceImpl  implements ISocialMeliService{
-    private IUserRepository userRepository;
-    private IPostRepository postRepository;
-    private ObjectMapper mapper;
+@RequiredArgsConstructor
+public class SocialMeliServiceImpl implements ISocialMeliService {
+    private final IUserRepository userRepository;
+    private final IPostRepository postRepository;
+    private final ObjectMapper mapper;
 
-    public SocialMeliServiceImpl(IUserRepository userRepository, IPostRepository postRepository, ObjectMapper mapper) {
-        this.userRepository = userRepository;
-        this.postRepository = postRepository;
-        this.mapper = mapper;
-    }
 
     @Override
     public FollowDto followSeller(int userId, int userIdToFollow) {
@@ -79,4 +79,16 @@ public class SocialMeliServiceImpl  implements ISocialMeliService{
                 userRepository.getBuyersFollowingSeller(sellerId).stream().count());
     }
 
+    @Override
+    public PostResponseDto createPost(PostRequestDto post) {
+        Integer postNewId = postRepository.findAll().size() + 1;
+        Integer userId = post.getUserId();
+        Post newPost = mapper.convertValue(post, Post.class);
+        newPost.setId(postNewId);
+        Post createdPost = userRepository.addPostToSeller(userId, newPost);
+        postRepository.addPost(newPost);
+        PostResponseDto response = mapper.convertValue(createdPost, PostResponseDto.class);
+        response.setPost_id(createdPost.getId());
+        return response;
+    }
 }

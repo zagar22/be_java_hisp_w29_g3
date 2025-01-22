@@ -1,16 +1,15 @@
 package com.bootcamp.be_java_hisp_w29_g3.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 public class Product {
     private Integer id;
     private String name;
     private String type;
     private String brand;
     private String color;
-    private String note;
+    private String notes;
+
+    public Product() {
+    }
 
     public Product(Integer id, String name, String type, String brand, String color, String note) {
         this.id = id;
@@ -18,7 +17,7 @@ public class Product {
         this.type = type;
         this.brand = brand;
         this.color = color;
-        this.note = note;
+        this.notes = note;
     }
 
     public Integer getId() {
@@ -61,11 +60,11 @@ public class Product {
         this.color = color;
     }
 
-    public String getNote() {
-        return note;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
