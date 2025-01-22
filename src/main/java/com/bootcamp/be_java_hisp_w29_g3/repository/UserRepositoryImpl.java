@@ -4,10 +4,7 @@ import com.bootcamp.be_java_hisp_w29_g3.entity.*;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
@@ -120,5 +117,18 @@ public class UserRepositoryImpl implements IUserRepository{
     @Override
     public boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow){
         return buyers.get(userId).getSellers().stream().anyMatch(seller -> seller.getId() == userIdToFollow);
+    }
+
+    @Override
+    public List<Buyer> getBuyersFollowingSeller(Integer sellerId) {
+        return buyers.values().stream()
+                .filter(buyer -> buyer.getSellers().stream()
+                        .anyMatch(seller -> seller.getId().equals(sellerId)))
+                .toList();
+    }
+
+    @Override
+    public Seller getSellerById(Integer id) {
+        return sellers.get(id);
     }
 }
