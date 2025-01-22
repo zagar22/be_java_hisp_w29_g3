@@ -6,6 +6,7 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostsByUserResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.UserFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
@@ -65,5 +66,11 @@ public class SocialMeliController {
     @GetMapping("/{userId}/followers/list")
     public ResponseEntity<UserFollowersDTO> getFollowers(@PathVariable int userId, @RequestParam(required = false, defaultValue = "") String order) {
         return new ResponseEntity<>(socialMeliService.getFollowers(userId, order), HttpStatus.OK);
+    }
+
+    @GetMapping("products/followed/{userId}/list")
+    public ResponseEntity<PostsByUserResponseDto> getFollowers(@PathVariable Integer userId,
+                                                               @RequestParam(required = false) String order) {
+        return new ResponseEntity<>(socialMeliService.searchPostsById(userId, order), HttpStatus.OK);
     }
 }

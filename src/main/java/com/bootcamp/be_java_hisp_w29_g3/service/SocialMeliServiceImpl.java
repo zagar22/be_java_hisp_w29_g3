@@ -20,6 +20,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,8 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     private final IUserRepository userRepository;
     private final IPostRepository postRepository;
     private final ObjectMapper mapper = JacksonUtil.createObjectMapper();
+
+    private static final String ORDER_DATE_ASC = "date_asc";
 
     @Override
     public FollowDto followSeller(int userId, int userIdToFollow) {
@@ -141,5 +145,33 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
                                                 .collect(Collectors.toList());
 
         return new UserFollowersDTO(sellerId, followers);
+    }
+
+    @Override
+    public PostsByUserResponseDto searchPostsById(Integer userId, String order) {
+        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId);
+        if(sellers.isEmpty())
+            throw new NotFoundException("El usuario no sigue a ningún vendedor");
+
+        LocalDate limitDate = LocalDate.now().minusWeeks(2);
+
+        List<Post> posts = sellers.stream()
+                .flatMap(seller -> seller.getPosts().stream())
+                .filter(seller -> seller.getDate().isAfter(limitDate))
+                .sorted(getPostDateComparator(order))
+                .toList();
+
+        if(posts.isEmpty())
+            throw new NotFoundException("No hay posts para mostrar");
+
+        List<PostByUserDto> postsDto = PostMapperUtil.mapToPostByUserResponseDto(posts, userId);
+        return new PostsByUserResponseDto(userId, postsDto);
+    }
+
+    private Comparator<Post> getPostDateComparator(String order){
+        if(order == null || ORDER_DATE_ASC.equals(order))
+            return Comparator.comparing(Post::getDate);
+
+        return Comparator.comparing(Post::getDate).reversed();
     }
 }
