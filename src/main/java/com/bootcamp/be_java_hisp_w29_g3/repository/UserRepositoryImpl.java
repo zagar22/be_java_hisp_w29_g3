@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements IUserRepository{
 
         // Crear posts de prueba para vendedores
         Post post1 = new Post(1, LocalDate.of(2025, 1, 21), product1, 1, 1000.0, true, 10.0);
-        Post post2 = new Post(2, LocalDate.of(2025, 1, 20), product2, 2, 600.0, false, 0.0);
+        Post post2 = new Post(2, LocalDate.of(2025, 1, 5), product2, 2, 600.0, false, 0.0);
         Post post3 = new Post(3, LocalDate.of(2025, 1, 22), product3, 3, 30.0, true, 5.0);
         Post post4 = new Post(4, LocalDate.of(2025, 1, 23), product4, 3, 50.0, false, 0.0);
 
