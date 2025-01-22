@@ -59,6 +59,6 @@ public class SocialMeliController {
 
     @GetMapping("/{userId}/followers/list")
     public ResponseEntity<UserFollowersDTO> getFollowers(@PathVariable int userId, @RequestParam(required = false, defaultValue = "") String order) {
-        return ResponseEntity.ok(socialMeliService.getFollowers(userId, order));
+        return new ResponseEntity<>(socialMeliService.getFollowers(userId, order), HttpStatus.OK);
     }
 }

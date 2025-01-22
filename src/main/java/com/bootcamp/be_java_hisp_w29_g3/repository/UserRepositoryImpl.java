@@ -155,6 +155,9 @@ public class UserRepositoryImpl implements IUserRepository{
 
     @Override
     public List<Seller> getFollowers(int sellerId, String order) {
+        if (!sellers.containsKey(sellerId)) {
+            throw new IllegalArgumentException("El vendedor con ID: " + sellerId + " no existe.");
+        }
 
         List<Buyer> followers = buyers.values().stream()
                                       .filter(buyer -> buyer.getSellers().stream()

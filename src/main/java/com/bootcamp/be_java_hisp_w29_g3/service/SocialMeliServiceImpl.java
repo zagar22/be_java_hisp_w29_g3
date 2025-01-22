@@ -18,6 +18,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,14 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         return PostMapperUtil.mapToPostResponseDto(createdPost, mapper);
     }
     public UserFollowersDTO getFollowers(int sellerId, String order) {
+        if (!userRepository.existsSellerById(sellerId)) {
+            throw new IllegalArgumentException("El vendedor con ID " + sellerId + " no existe.");
+        }
+
+        if (!order.isEmpty() && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
+            throw new IllegalArgumentException("El parámetro 'order' debe ser 'name_asc', 'name_desc' o estar vacío.");
+        }
+
         List<UserDTO> followers = userRepository.getFollowers(sellerId, order)
                                                 .stream()
                                                 .map(seller -> new UserDTO(seller.getId(), seller.getName()))
