@@ -1,5 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g3.controller;
 
+import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
 
@@ -26,12 +28,12 @@ public class SocialMeliController {
     }
 
     @PostMapping("/users/{userId}/follow/{userIdToFollow}")
-    public ResponseEntity<?> followSeller(@PathVariable int userId, @PathVariable int userIdToFollow){
+    public ResponseEntity<FollowDto> followSeller(@PathVariable int userId, @PathVariable int userIdToFollow){
         return new ResponseEntity<>(socialMeliService.followSeller(userId,userIdToFollow),HttpStatus.OK);
     }
 
     @PostMapping("/users/{userId}/unfollow/{userIdToUnfollow}")
-    public ResponseEntity<?> unFollowSeller(@PathVariable int userId, @PathVariable int userIdToUnfollow){
+    public ResponseEntity<UnfollowDto> unFollowSeller(@PathVariable int userId, @PathVariable int userIdToUnfollow){
         return new ResponseEntity<>(socialMeliService.unfollowSeller(userId,userIdToUnfollow),HttpStatus.OK);
     }
 }

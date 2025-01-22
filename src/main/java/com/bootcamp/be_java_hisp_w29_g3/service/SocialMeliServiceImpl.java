@@ -1,6 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
@@ -45,7 +46,7 @@ public class SocialMeliServiceImpl  implements ISocialMeliService{
     }
 
     @Override
-    public FollowDto unfollowSeller(int userId, int userIdToUnfollow) {
+    public UnfollowDto unfollowSeller(int userId, int userIdToUnfollow) {
         //Verifico existencia de vendedor
         if(userRepository.existsSellerById(userIdToUnfollow)){
             //Verifico existencia de comprador
@@ -53,7 +54,7 @@ public class SocialMeliServiceImpl  implements ISocialMeliService{
                 //Verifico si ya se siguen
                 if(!userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnfollow)){
                     userRepository.unfollowSeller(userId,userIdToUnfollow);
-                    return new FollowDto("El usuario ya no sigue al vendedor");
+                    return new UnfollowDto("El usuario ya no sigue al vendedor");
                 }else{
                     throw new BadRequestException("El usuario no sigue al vendedor");
                 }
