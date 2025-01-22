@@ -9,12 +9,14 @@ import java.util.Map;
 
 public interface IUserRepository {
     Map<Integer, Seller> getAll();
+    List<Seller> getSellersFollowedByBuyer(int buyerId);
+    Long countPromotionalProductsBySeller(int sellerId);
     void followSeller(int userId, int userIdToFollow);
     void unfollowSeller(int userId, int userIdToUnfollow);
     boolean existsSellerById(int userIdToFollow);
     boolean existsBuyerById(int userId);
     boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow);
-
+    Buyer getBuyerById(Integer userId);
     Post addPostToSeller(Integer userId, Post newPost);
     List<Buyer> getBuyersFollowingSeller(Integer sellerId);
     Seller getSellerById(Integer id);
