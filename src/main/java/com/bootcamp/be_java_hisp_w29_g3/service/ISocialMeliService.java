@@ -2,13 +2,11 @@ package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import com.bootcamp.be_java_hisp_w29_g3.dto.PostDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UserFollowersDTO;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public interface ISocialMeliService {
     FollowDto followSeller(int userId, int userIdToFollow);

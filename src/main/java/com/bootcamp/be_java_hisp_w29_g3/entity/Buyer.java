@@ -1,6 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g3.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;

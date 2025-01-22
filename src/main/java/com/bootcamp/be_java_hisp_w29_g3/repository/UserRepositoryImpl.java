@@ -1,10 +1,12 @@
 package com.bootcamp.be_java_hisp_w29_g3.repository;
 
-import com.bootcamp.be_java_hisp_w29_g3.entity.*;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
