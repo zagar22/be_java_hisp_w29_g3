@@ -52,7 +52,7 @@ public class SocialMeliServiceImpl  implements ISocialMeliService{
             //Verifico existencia de comprador
             if(userRepository.existsBuyerById(userId)){
                 //Verifico si ya se siguen
-                if(!userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnfollow)){
+                if(userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnfollow)){
                     userRepository.unfollowSeller(userId,userIdToUnfollow);
                     return new UnfollowDto("El usuario ya no sigue al vendedor");
                 }else{
