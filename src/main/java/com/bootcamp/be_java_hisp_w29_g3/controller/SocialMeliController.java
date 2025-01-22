@@ -1,20 +1,23 @@
 package com.bootcamp.be_java_hisp_w29_g3.controller;
 
+import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UserFollowersDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 public class SocialMeliController {
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
     private final ISocialMeliService socialMeliService;
 
 
@@ -36,6 +39,16 @@ public class SocialMeliController {
     @PostMapping("/users/{userId}/unfollow/{userIdToUnfollow}")
     public ResponseEntity<UnfollowDto> unFollowSeller(@PathVariable int userId, @PathVariable int userIdToUnfollow){
         return new ResponseEntity<>(socialMeliService.unfollowSeller(userId,userIdToUnfollow),HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}/followed/list")
+    public ResponseEntity<BuyerFollowedSellersDto>  getSellersFollowedByBuyer(@PathVariable Integer userId) {
+        return new ResponseEntity<>(socialMeliService.getUserFollowSellers(userId),HttpStatus.OK) ;
+    }
+
+    @GetMapping("/products/promo-post/count")
+    public ResponseEntity<PromoProductDto> getPromoProducts(@RequestParam Integer user_id){
+        return new ResponseEntity<>(socialMeliService.getPromoProducts(user_id),HttpStatus.OK);
     }
 
 //    punto 2

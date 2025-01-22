@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
-    private Map<Integer,Seller> sellers = new HashMap<>();
-    private Map<Integer,Buyer> buyers = new HashMap<>();
+    private final Map<Integer,Seller> sellers = new HashMap<>();
+    private final Map<Integer,Buyer> buyers = new HashMap<>();
 
     public UserRepositoryImpl(){
          loadDB();
@@ -55,11 +55,6 @@ public class UserRepositoryImpl implements IUserRepository{
         postsSellerB.add(post3);
         postsSellerB.add(post4);
 
-        // Crear vendedores
-        // Seller sellerA = new Seller(1, "Vendedor A", postsSellerA);
-        // Seller sellerB = new Seller(2, "Vendedor B", postsSellerB);
-
-
         Seller sellerA = Seller.builder()
                 .id(1)
                 .name("Vendedor A")
@@ -79,6 +74,7 @@ public class UserRepositoryImpl implements IUserRepository{
         // Crear compradores
         List<Seller> sellersBuyer1 = new ArrayList<>();
         sellersBuyer1.add(sellerA);  // Comprador 1 compra a Vendedor A
+        sellersBuyer1.add(sellerB);  // Comprador 1 compra a Vendedor B
 
         List<Seller> sellersBuyer2 = new ArrayList<>();
         sellersBuyer2.add(sellerB);  // Comprador 2 compra a Vendedor B
@@ -143,16 +139,36 @@ public class UserRepositoryImpl implements IUserRepository{
     }
 
     @Override
+    public Buyer getBuyerById(Integer buyerId) {
+        return buyers.get(buyerId);
+    }
+
+    @Override
+    public Seller getSellerById(Integer userId) {
+        return sellers.get(userId);
+    }
+
+    public List<Seller> getSellersFollowedByBuyer(int userId) {
+        Buyer buyer = buyers.get(userId);
+        return buyer != null ? buyer.getSellers() : new ArrayList<>();
+    }
+
+    public Long countPromotionalProductsBySeller(int sellerId) {
+        Seller seller = sellers.get(sellerId);
+        if (seller != null) {
+            return seller.getPosts().stream()
+                    .filter(Post::getHasProm)
+                    .count();
+        }
+        return 0L;
+    }
+
+    @Override
     public List<Buyer> getBuyersFollowingSeller(Integer sellerId) {
         return buyers.values().stream()
                 .filter(buyer -> buyer.getSellers().stream()
                         .anyMatch(seller -> seller.getId().equals(sellerId)))
                 .toList();
-    }
-
-    @Override
-    public Seller getSellerById(Integer id) {
-        return sellers.get(id);
     }
 
     @Override
