@@ -19,4 +19,11 @@ public class PostRepositoryImpl implements IPostRepository {
     public void addPost(Post post) {
         listOfPosts.add(post);
     }
+
+    @Override
+    public List<Post> filterPostsByDiscountRange(Integer initialValue, Integer finalValue) {
+        return  listOfPosts.stream()
+                .filter(post -> post.getHasProm() && post.getDiscount() >= initialValue && post.getDiscount() <= finalValue)
+                .toList();
+    }
 }
