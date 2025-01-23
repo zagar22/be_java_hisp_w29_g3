@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 public class SocialMeliController {
@@ -63,4 +65,11 @@ public class SocialMeliController {
                                                                @RequestParam(required = false) String order) {
         return new ResponseEntity<>(socialMeliService.searchPostsById(userId, order), HttpStatus.OK);
     }
+
+//    punto 13
+    @GetMapping("/users/followers/most-popular")
+    public ResponseEntity<List<FollowerCountDTO>> getSellersByFollowerCount(){
+        return new ResponseEntity<>(socialMeliService.getSellersByFollowerCount(), HttpStatus.OK);
+    }
+
 }
