@@ -129,8 +129,14 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         newPost.setId(postNewId);
         Post createdPost = userRepository.addPostToSeller(userId, newPost);
         postRepository.addPost(newPost);
-        return PostMapperUtil.mapToPostResponseDto(createdPost, mapper);
+
+        if (!newPost.getHasProm()) {
+            return PostMapperUtil.mapToBasicPostResponseDto(createdPost, mapper);
+        } else {
+            return PostMapperUtil.mapToFullPostResponseDto(createdPost, mapper);
+        }
     }
+
     public UserFollowersDTO getFollowers(int sellerId, String order) {
         if (!userRepository.existsSellerById(sellerId)) {
             throw new IllegalArgumentException("El vendedor con ID " + sellerId + " no existe.");
