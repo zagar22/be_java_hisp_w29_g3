@@ -19,10 +19,6 @@ public class UserRepositoryImpl implements IUserRepository{
          loadDB();
     }
 
-    public Map<Integer,Seller> getAll(){
-        return sellers;
-    }
-
     @Override
     public Post addPostToSeller(Integer userId, Post newPost) {
         Seller seller = sellers.get(userId);
@@ -81,10 +77,6 @@ public class UserRepositoryImpl implements IUserRepository{
 
         List<Seller> sellersBuyer3 = new ArrayList<>();
         sellersBuyer3.add(sellerA);
-
-        // Crear compradores
-        // Buyer buyer1 = new Buyer(1, "Comprador X", sellersBuyer1);
-        // Buyer buyer2 = new Buyer(2, "Comprador Y", sellersBuyer2);
 
         var buyer1 = Buyer.builder()
                 .id(1)

@@ -1,6 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g3.util;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.ProductDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.BasicPostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FullPostResponseDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostByUserDto;
@@ -12,19 +13,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostMapperUtil {
+public class MapperUtil {
+    private static final ObjectMapper mapper = JacksonUtil.createObjectMapper();
 
+    public static Post mapToPost(PostRequestDto postDto){
+        return mapper.convertValue(postDto, Post.class);
+    }
 
-    public static PostResponseDto mapToFullPostResponseDto(Post post, ObjectMapper objectMapper) {
-        FullPostResponseDto response = objectMapper.convertValue(post, FullPostResponseDto.class);
-        response.setPost_id(post.getId());
+    public static PostResponseDto mapToFullPostResponseDto(Post post) {
+        FullPostResponseDto response = mapper.convertValue(post, FullPostResponseDto.class);
+        response.setPostId(post.getId());
         return response;
     }
 
-
-    public static PostResponseDto mapToBasicPostResponseDto(Post post, ObjectMapper objectMapper) {
-        BasicPostResponseDto response = objectMapper.convertValue(post, BasicPostResponseDto.class);
-        response.setPost_id(post.getId());
+    public static PostResponseDto mapToBasicPostResponseDto(Post post) {
+        BasicPostResponseDto response = mapper.convertValue(post, BasicPostResponseDto.class);
+        response.setPostId(post.getId());
         return response;
     }
 
