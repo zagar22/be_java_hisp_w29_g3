@@ -28,7 +28,6 @@ public class UserRepositoryImpl implements IUserRepository{
         return newPost;
     }
 
-
     private void loadDB(){
         // Crear productos de prueba
         Product product1 = new Product(1, "Laptop Dell", "Electrónica", "Dell", "Negro", "Laptop de alta gama");
@@ -178,14 +177,4 @@ public class UserRepositoryImpl implements IUserRepository{
 
         return followers;
     }
-
-    public List<Post> filterPostsByDiscountRange(Integer initialValue, Integer finalValue) {
-        return sellers.values()
-                .stream()
-                .flatMap(seller -> seller.getPosts().stream())
-                .filter(post -> post.getHasProm() && post.getDiscount() >= initialValue && post.getDiscount() <= finalValue) // Filtramos por promoción y descuento
-                .toList();
-    }
-
-
 }

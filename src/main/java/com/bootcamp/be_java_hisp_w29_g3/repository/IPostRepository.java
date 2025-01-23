@@ -7,4 +7,5 @@ import java.util.List;
 public interface IPostRepository {
     List<Post> findAll();
     void addPost(Post post);
+    List<Post> filterPostsByDiscountRange(Integer initialValue, Integer finalValue);
 }

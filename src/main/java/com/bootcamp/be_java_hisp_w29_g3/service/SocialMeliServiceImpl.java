@@ -11,6 +11,7 @@ import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
+import com.bootcamp.be_java_hisp_w29_g3.repository.PostRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g3.repository.UserRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil;
 import lombok.Data;
@@ -168,8 +169,9 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         return Comparator.comparing(Post::getDate).reversed();
     }
 
+    @Override
     public List<PostDto> filterPostsByDiscountRange(Integer initialValue, Integer finalValue) {
-        List<Post> listPosts = userRepositoryImpl.filterPostsByDiscountRange(initialValue,finalValue);
+        List<Post> listPosts = postRepository.filterPostsByDiscountRange(initialValue,finalValue);
         if(listPosts.isEmpty()){
             throw new NotFoundException("No se encontraron posts con el rango indicado.");
         }

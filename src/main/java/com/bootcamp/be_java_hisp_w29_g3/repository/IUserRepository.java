@@ -19,5 +19,4 @@ public interface IUserRepository {
     List<Buyer> getBuyersFollowingSeller(Integer sellerId);
     Seller getSellerById(Integer id);
     List<Buyer> getFollowers(int sellerId, String order);
-    List<Post> filterPostsByDiscountRange(Integer initialValue, Integer finalValue);
 }
