@@ -11,6 +11,7 @@ import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
+import com.bootcamp.be_java_hisp_w29_g3.repository.UserRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import static com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil.mapToPost;
 public class SocialMeliServiceImpl implements ISocialMeliService {
     private final IUserRepository userRepository;
     private final IPostRepository postRepository;
+    private final UserRepositoryImpl userRepositoryImpl;
 
     @Override
     public FollowDto followSeller(int userId, int userIdToFollow) {
@@ -164,5 +166,13 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
             return Comparator.comparing(Post::getDate);
         }
         return Comparator.comparing(Post::getDate).reversed();
+    }
+
+    public List<PostDto> filterPostsByDiscountRange(Integer initialValue, Integer finalValue) {
+        List<Post> listPosts = userRepositoryImpl.filterPostsByDiscountRange(initialValue,finalValue);
+        if(listPosts.isEmpty()){
+            throw new NotFoundException("No se encontraron posts con el rango indicado.");
+        }
+        return MapperUtil.buildPostDto(listPosts);
     }
 }

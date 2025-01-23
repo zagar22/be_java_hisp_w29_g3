@@ -2,10 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g3.util;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.ProductDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.BasicPostResponseDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.FullPostResponseDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostByUserDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PostResponseDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +21,10 @@ public class MapperUtil {
         FullPostResponseDto response = mapper.convertValue(post, FullPostResponseDto.class);
         response.setPostId(post.getId());
         return response;
+    }
+
+    public static List<PostDto> buildPostDto(List<Post> post){
+        return post.stream().map(p -> mapper.convertValue(p,PostDto.class)).toList();
     }
 
     public static PostResponseDto mapToBasicPostResponseDto(Post post) {

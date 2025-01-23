@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 public class SocialMeliController {
@@ -62,5 +64,10 @@ public class SocialMeliController {
     public ResponseEntity<PostsByUserResponseDto> getFollowers(@PathVariable Integer userId,
                                                                @RequestParam(required = false) String order) {
         return new ResponseEntity<>(socialMeliService.searchPostsById(userId, order), HttpStatus.OK);
+    }
+
+    @GetMapping("/products/promo-post/discount-range")
+    public ResponseEntity<List<PostDto>> filterPostsByDiscountRange(@RequestParam Integer initialValue, @RequestParam Integer finalValue){
+        return new ResponseEntity<>(socialMeliService.filterPostsByDiscountRange(initialValue,finalValue), HttpStatus.OK);
     }
 }
