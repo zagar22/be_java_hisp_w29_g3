@@ -1,8 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.FollowDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.UnfollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UserDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
@@ -13,9 +11,7 @@ import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
-import com.bootcamp.be_java_hisp_w29_g3.util.JacksonUtil;
-import com.bootcamp.be_java_hisp_w29_g3.util.PostMapperUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,15 +21,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil.mapToPost;
+
 @Service
 @Data
 @RequiredArgsConstructor
 public class SocialMeliServiceImpl implements ISocialMeliService {
     private final IUserRepository userRepository;
     private final IPostRepository postRepository;
-    private final ObjectMapper mapper = JacksonUtil.createObjectMapper();
-
-    private static final String ORDER_DATE_ASC = "date_asc";
 
     @Override
     public FollowDto followSeller(int userId, int userIdToFollow) {
@@ -101,11 +96,9 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     @Override
     public PromoProductDto getPromoProducts(Integer userId) {
         Seller seller = userRepository.getSellerById(userId);
-
         if (seller == null){
-            throw new NotFoundException("El vendedor no existe");
+            throw new NotFoundException("No existe el vendedor");
         }
-
         Long promoProducts = userRepository.countPromotionalProductsBySeller(userId);
         return new PromoProductDto(seller.getId(),seller.getName(),promoProducts);
     }
@@ -125,31 +118,24 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     public PostResponseDto createPost(PostRequestDto post) {
         Integer postNewId = postRepository.findAll().size() + 1;
         Integer userId = post.getUserId();
-        Post newPost = mapper.convertValue(post, Post.class);
+        Post newPost = mapToPost(post);
         newPost.setId(postNewId);
         Post createdPost = userRepository.addPostToSeller(userId, newPost);
         postRepository.addPost(newPost);
-
         if (!newPost.getHasProm()) {
-            return PostMapperUtil.mapToBasicPostResponseDto(createdPost, mapper);
+            return MapperUtil.mapToBasicPostResponseDto(createdPost);
         } else {
-            return PostMapperUtil.mapToFullPostResponseDto(createdPost, mapper);
+            return MapperUtil.mapToFullPostResponseDto(createdPost);
         }
     }
 
     public UserFollowersDTO getFollowers(int sellerId, String order) {
         if (!userRepository.existsSellerById(sellerId)) {
-            throw new IllegalArgumentException("El vendedor con ID " + sellerId + " no existe.");
+            throw new NotFoundException("No existe el vendedor");
         }
-
-        if (!order.isEmpty() && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
-            throw new IllegalArgumentException("El parámetro 'order' debe ser 'name_asc', 'name_desc' o estar vacío.");
-        }
-
         List<UserDTO> followers = userRepository.getFollowers(sellerId, order).stream()
                                                 .map(buyer -> new UserDTO(buyer.getId(), buyer.getName()))
                                                 .collect(Collectors.toList());
-
         return new UserFollowersDTO(sellerId, followers);
     }
 
@@ -160,24 +146,23 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
             throw new NotFoundException("El usuario no sigue a ningún vendedor");
 
         LocalDate limitDate = LocalDate.now().minusWeeks(2);
-
         List<Post> posts = sellers.stream()
                 .flatMap(seller -> seller.getPosts().stream())
                 .filter(seller -> seller.getDate().isAfter(limitDate))
                 .sorted(getPostDateComparator(order))
                 .toList();
 
-        if(posts.isEmpty())
+        if(posts.isEmpty()) {
             throw new NotFoundException("No hay posts para mostrar");
-
-        List<PostByUserDto> postsDto = PostMapperUtil.mapToPostByUserResponseDto(posts, userId);
+        }
+        List<PostByUserDto> postsDto = MapperUtil.mapToPostByUserResponseDto(posts, userId);
         return new PostsByUserResponseDto(userId, postsDto);
     }
 
     private Comparator<Post> getPostDateComparator(String order){
-        if(order == null || ORDER_DATE_ASC.equals(order))
+        if(order == null || order.equalsIgnoreCase("date_asc")) {
             return Comparator.comparing(Post::getDate);
-
+        }
         return Comparator.comparing(Post::getDate).reversed();
     }
 }

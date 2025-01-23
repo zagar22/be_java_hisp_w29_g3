@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowerCountDTO {
-    private Integer user_id;
-    private String user_name;
-    private Long followers_count;
+    private Integer userId;
+    private String userName;
+    private Long followersCount;
 
 
 }

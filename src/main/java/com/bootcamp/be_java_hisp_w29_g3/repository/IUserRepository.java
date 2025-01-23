@@ -5,10 +5,8 @@ import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IUserRepository {
-    Map<Integer, Seller> getAll();
     List<Seller> getSellersFollowedByBuyer(int buyerId);
     Long countPromotionalProductsBySeller(int sellerId);
     void followSeller(int userId, int userIdToFollow);
