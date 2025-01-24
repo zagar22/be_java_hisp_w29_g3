@@ -17,4 +17,5 @@ public interface ISocialMeliService {
     FollowerCountDTO calculateSellerFollowerCount(Integer sellerId);
     List<FollowerCountDTO> getSellersByFollowerCount();
     PostsByUserResponseDto searchPostsById(Integer userId, String order);
+    List<PostDto> filterPostsByDiscountRange(Integer initialValue, Integer finalValue);
 }
