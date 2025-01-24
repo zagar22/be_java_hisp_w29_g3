@@ -74,8 +74,15 @@ public class SocialMeliController {
 
 
     @GetMapping("/products/promo-post/discount-range")
-    public ResponseEntity<List<PostDto>> filterPostsByDiscountRange(@RequestParam Integer initialValue, @RequestParam Integer finalValue){
-        return new ResponseEntity<>(socialMeliService.filterPostsByDiscountRange(initialValue,finalValue), HttpStatus.OK);
+    public ResponseEntity<List<PostDto>> filterPostsByDiscountRange(@RequestParam Integer initialValue, @RequestParam Integer finalValue) {
+        return new ResponseEntity<>(socialMeliService.filterPostsByDiscountRange(initialValue, finalValue), HttpStatus.OK);
+    }
+
+    @GetMapping("/products/{product}/price/{minPrice}/{maxPrice}")
+    public ResponseEntity<List<ProductFilterDto>> getProductByRangePrice(@PathVariable Double minPrice,
+                                                                         @PathVariable Double maxPrice,
+                                                                         @PathVariable String product){
+        return new ResponseEntity<>(socialMeliService.getProductByRangePrice(minPrice,maxPrice, product),HttpStatus.OK);
     }
 
 }
