@@ -63,7 +63,7 @@ public class SocialMeliController {
     @GetMapping("products/followed/{userId}/list")
     public ResponseEntity<PostsByUserResponseDto> getFollowers(@PathVariable Integer userId,
                                                                @RequestParam(required = false) String order) {
-        return new ResponseEntity<>(socialMeliService.searchPostsById(userId, order), HttpStatus.OK);
+        return new ResponseEntity<>(socialMeliService.searchPostsByUserIdInLastTwoWeeks(userId, order), HttpStatus.OK);
     }
 
 //    punto 13

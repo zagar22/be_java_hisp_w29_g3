@@ -12,10 +12,8 @@ import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
-import com.bootcamp.be_java_hisp_w29_g3.repository.PostRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g3.repository.UserRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +27,10 @@ import java.util.stream.Collectors;
 import static com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil.mapToPost;
 
 @Service
-@Data
 @RequiredArgsConstructor
 public class SocialMeliServiceImpl implements ISocialMeliService {
     private final IUserRepository userRepository;
     private final IPostRepository postRepository;
-    private final UserRepositoryImpl userRepositoryImpl;
 
     @Override
     public FollowDto followSeller(int userId, int userIdToFollow) {
@@ -152,17 +148,14 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     }
 
     @Override
-    public PostsByUserResponseDto searchPostsById(Integer userId, String order) {
+    public PostsByUserResponseDto searchPostsByUserIdInLastTwoWeeks(Integer userId, String order) {
         List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId);
         if(sellers.isEmpty())
-            throw new NotFoundException("El usuario no sigue a ningún vendedor");
+            throw new NotFoundException("El usuario no sigue vendedores");
 
         LocalDate limitDate = LocalDate.now().minusWeeks(2);
-        List<Post> posts = sellers.stream()
-                .flatMap(seller -> seller.getPosts().stream())
-                .filter(seller -> seller.getDate().isAfter(limitDate))
-                .sorted(getPostDateComparator(order))
-                .toList();
+
+        List<Post> posts = userRepository.findPostsFromSellerByUserIdWithLimitDate(userId, limitDate, order);
 
         if(posts.isEmpty()) {
             throw new NotFoundException("No hay posts para mostrar");
@@ -194,13 +187,6 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         }
 
         return result;
-    }
-
-    private Comparator<Post> getPostDateComparator(String order){
-        if(order == null || order.equalsIgnoreCase("date_asc")) {
-            return Comparator.comparing(Post::getDate);
-        }
-        return Comparator.comparing(Post::getDate).reversed();
     }
 
     @Override

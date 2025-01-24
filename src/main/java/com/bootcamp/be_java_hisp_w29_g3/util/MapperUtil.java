@@ -5,7 +5,6 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
-import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
