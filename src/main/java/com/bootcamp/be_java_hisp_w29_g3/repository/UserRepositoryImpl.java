@@ -35,14 +35,13 @@ public class UserRepositoryImpl implements IUserRepository {
         Product product2 = new Product(2, "Smartphone Samsung", "Electrónica", "Samsung", "Azul", "Smartphone con excelente cámara");
         Product product3 = new Product(3, "Camisa Nike", "Ropa", "Nike", "Blanco", "Camisa deportiva");
         Product product4 = new Product(4, "Zapatos Adidas", "Ropa", "Adidas", "Rojo", "Zapatos cómodos para deporte");
-        Product product5 = new Product(1, "Laptop Dell", "Electrónica", "Dell", "Negro", "Laptop de alta gama");
 
         // Crear posts de prueba para vendedores
         Post post1 = new Post(1, LocalDate.of(2025, 1, 21), product1, 1, 1000.0, true, 10.0);
         Post post2 = new Post(2, LocalDate.of(2025, 1, 5), product2, 2, 600.0, false, 0.0);
         Post post3 = new Post(3, LocalDate.of(2025, 1, 22), product3, 3, 30.0, true, 5.0);
         Post post4 = new Post(4, LocalDate.of(2025, 1, 23), product4, 3, 50.0, false, 0.0);
-        Post post5 = new Post(4, LocalDate.of(2025, 1, 23), product5, 3, 50.0, false, 0.0);
+        Post post5 = new Post(5, LocalDate.of(2025, 1, 24), product1, 3, 50.0, false, 0.0);
 
         // Crear listas de posts para vendedores
         List<Post> postsSellerA = new ArrayList<>();
@@ -213,4 +212,19 @@ public class UserRepositoryImpl implements IUserRepository {
         return sellers.keySet().stream().toList();
     }
 
+    @Override
+    public List<Post> findPostsFromSellerByUserIdWithLimitDate(Integer userId, LocalDate limitDate, String order) {
+        return buyers.get(userId).getSellers().stream()
+                .flatMap(seller -> seller.getPosts().stream())
+                .filter(seller -> seller.getDate().isAfter(limitDate))
+                .sorted(getPostDateComparator(order))
+                .toList();
+    }
+
+    private Comparator<Post> getPostDateComparator(String order){
+        if(order == null || order.equalsIgnoreCase("date_asc")) {
+            return Comparator.comparing(Post::getDate);
+        }
+        return Comparator.comparing(Post::getDate).reversed();
+    }
 }
