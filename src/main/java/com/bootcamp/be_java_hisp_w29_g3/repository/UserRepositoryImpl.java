@@ -8,15 +8,16 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserRepositoryImpl implements IUserRepository{
-    private final Map<Integer,Seller> sellers = new HashMap<>();
-    private final Map<Integer,Buyer> buyers = new HashMap<>();
+public class UserRepositoryImpl implements IUserRepository {
+    private final Map<Integer, Seller> sellers = new HashMap<>();
+    private final Map<Integer, Buyer> buyers = new HashMap<>();
 
-    public UserRepositoryImpl(){
-         loadDB();
+    public UserRepositoryImpl() {
+        loadDB();
     }
 
     @Override
@@ -34,17 +35,20 @@ public class UserRepositoryImpl implements IUserRepository{
         Product product2 = new Product(2, "Smartphone Samsung", "Electrónica", "Samsung", "Azul", "Smartphone con excelente cámara");
         Product product3 = new Product(3, "Camisa Nike", "Ropa", "Nike", "Blanco", "Camisa deportiva");
         Product product4 = new Product(4, "Zapatos Adidas", "Ropa", "Adidas", "Rojo", "Zapatos cómodos para deporte");
+        Product product5 = new Product(1, "Laptop Dell", "Electrónica", "Dell", "Negro", "Laptop de alta gama");
 
         // Crear posts de prueba para vendedores
         Post post1 = new Post(1, LocalDate.of(2025, 1, 21), product1, 1, 1000.0, true, 10.0);
         Post post2 = new Post(2, LocalDate.of(2025, 1, 5), product2, 2, 600.0, false, 0.0);
         Post post3 = new Post(3, LocalDate.of(2025, 1, 22), product3, 3, 30.0, true, 5.0);
         Post post4 = new Post(4, LocalDate.of(2025, 1, 23), product4, 3, 50.0, false, 0.0);
+        Post post5 = new Post(4, LocalDate.of(2025, 1, 23), product5, 3, 50.0, false, 0.0);
 
         // Crear listas de posts para vendedores
         List<Post> postsSellerA = new ArrayList<>();
         postsSellerA.add(post1);
         postsSellerA.add(post2);
+        postsSellerA.add(post5);
 
         List<Post> postsSellerB = new ArrayList<>();
         postsSellerB.add(post3);
@@ -113,19 +117,19 @@ public class UserRepositoryImpl implements IUserRepository{
 
     //Verifico si existe el vendedor
     @Override
-    public boolean existsSellerById(int userIdToFollow){
+    public boolean existsSellerById(int userIdToFollow) {
         return sellers.containsKey(userIdToFollow);
     }
 
     //Verifico si existe el comprador
     @Override
-    public boolean existsBuyerById(int userId){
+    public boolean existsBuyerById(int userId) {
         return buyers.containsKey(userId);
     }
 
     //Verifico si el comprador ya seguia al vendedor
     @Override
-    public boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow){
+    public boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow) {
         return buyers.get(userId).getSellers().stream().anyMatch(seller -> seller.getId() == userIdToFollow);
     }
 
@@ -166,7 +170,7 @@ public class UserRepositoryImpl implements IUserRepository{
     public List<Buyer> getFollowers(int sellerId, String order) {
         List<Buyer> followers = buyers.values().stream()
                 .filter(buyer -> buyer.getSellers().stream()
-                .anyMatch(seller -> seller.getId() == sellerId))
+                        .anyMatch(seller -> seller.getId() == sellerId))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         if ("name_asc".equalsIgnoreCase(order)) {
@@ -179,9 +183,34 @@ public class UserRepositoryImpl implements IUserRepository{
     }
 
     @Override
+    public List<Seller> getSellersByRangePrice(final Double minPrice, final Double maxPrice, final String productName) {
+        List<Seller> sellersByPriceList = sellers.values()
+                .stream()
+                .filter(filterPostsByPriceRange(minPrice, maxPrice))
+                .toList();
+
+        return sellersByPriceList.stream()
+                .filter(filterPostsByProductName(productName))
+                .toList();
+    }
+
+    private static Predicate<Seller> filterPostsByPriceRange(Double minPrice, Double maxPrice) {
+        return seller -> seller.getPosts()
+                .stream()
+                .filter(post -> (post.getPrice() >= minPrice && post.getPrice() <= maxPrice))
+                .anyMatch(post -> (post.getPrice() >= minPrice && post.getPrice() <= maxPrice));
+    }
+
+
+    private static Predicate<Seller> filterPostsByProductName(String productName) {
+        return seller -> seller.getPosts()
+                .stream()
+                .filter(post -> post.getProduct().getName().equalsIgnoreCase(productName))
+                .anyMatch(post -> post.getProduct().getName().equalsIgnoreCase(productName));
+    }
+
     public List<Integer> getAllSellersId() {
         return sellers.keySet().stream().toList();
     }
-
 
 }

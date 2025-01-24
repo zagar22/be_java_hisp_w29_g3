@@ -6,6 +6,7 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
@@ -19,8 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil.mapToPost;
@@ -166,6 +169,31 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         }
         List<PostByUserDto> postsDto = MapperUtil.mapToPostByUserResponseDto(posts, userId);
         return new PostsByUserResponseDto(userId, postsDto);
+    }
+
+    @Override
+    public List<ProductFilterDto> getProductByRangePrice(Double minPrice, Double maxPrice, String product) {
+        List<Seller> sellers = userRepository.getSellersByRangePrice(minPrice,maxPrice,product);
+
+        if (sellers.isEmpty()){
+            throw new NotFoundException("No se encontró el producto");
+        }
+        List<ProductFilterDto> result = new ArrayList<>();
+        for (Seller seller : sellers) {
+            for (Post post : seller.getPosts()) {
+                if (post.getPrice() >= minPrice && post.getPrice() <= maxPrice) {
+                    if (Objects.equals(post.getProduct().getName(), product)) {
+                        int sellerId = seller.getId();
+                        String sellerName = seller.getName();
+                        Product prod = post.getProduct();
+                        Double price = post.getPrice();
+                        result.add(new ProductFilterDto(sellerId, sellerName, prod, price));
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private Comparator<Post> getPostDateComparator(String order){

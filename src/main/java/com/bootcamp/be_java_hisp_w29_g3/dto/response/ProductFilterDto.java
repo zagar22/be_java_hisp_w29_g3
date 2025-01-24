@@ -4,17 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class PostDto {
-    private Integer id;
-    private LocalDate date;
+@AllArgsConstructor
+@Data
+public class ProductFilterDto {
+    private Integer sellerId;
+    private String sellerName;
     private Product product;
-    private Integer category;
     private Double price;
-    private Boolean hasProm;
-    private Double discount;
 }
