@@ -66,8 +66,16 @@ public class SocialMeliController {
         return new ResponseEntity<>(socialMeliService.searchPostsById(userId, order), HttpStatus.OK);
     }
 
+//    punto 13
+    @GetMapping("/users/followers/most-popular")
+    public ResponseEntity<List<FollowerCountDTO>> getSellersByFollowerCount(){
+        return new ResponseEntity<>(socialMeliService.getSellersByFollowerCount(), HttpStatus.OK);
+    }
+
+
     @GetMapping("/products/promo-post/discount-range")
     public ResponseEntity<List<PostDto>> filterPostsByDiscountRange(@RequestParam Integer initialValue, @RequestParam Integer finalValue){
         return new ResponseEntity<>(socialMeliService.filterPostsByDiscountRange(initialValue,finalValue), HttpStatus.OK);
     }
+
 }

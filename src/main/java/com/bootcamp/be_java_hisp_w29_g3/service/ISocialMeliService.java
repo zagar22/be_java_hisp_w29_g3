@@ -14,7 +14,8 @@ public interface ISocialMeliService {
     PromoProductDto getPromoProducts(Integer userId);
     UserFollowersDTO getFollowers(int sellerId, String order);
     PostResponseDto createPost(PostRequestDto post);
-    FollowerCountDTO calculateSellerFollowerCount(@PathVariable Integer sellerId);
+    FollowerCountDTO calculateSellerFollowerCount(Integer sellerId);
+    List<FollowerCountDTO> getSellersByFollowerCount();
     PostsByUserResponseDto searchPostsById(Integer userId, String order);
     List<PostDto> filterPostsByDiscountRange(Integer initialValue, Integer finalValue);
 }

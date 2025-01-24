@@ -177,4 +177,11 @@ public class UserRepositoryImpl implements IUserRepository{
 
         return followers;
     }
+
+    @Override
+    public List<Integer> getAllSellersId() {
+        return sellers.keySet().stream().toList();
+    }
+
+
 }

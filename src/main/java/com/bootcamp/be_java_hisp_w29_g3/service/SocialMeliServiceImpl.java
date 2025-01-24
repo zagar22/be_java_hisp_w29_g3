@@ -118,6 +118,12 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     }
 
     @Override
+    public List<FollowerCountDTO> getSellersByFollowerCount() {
+        return userRepository.getAllSellersId().stream().map(id -> calculateSellerFollowerCount(id) )
+                .sorted(Comparator.comparing(FollowerCountDTO::getFollowersCount).reversed()).toList();
+    }
+
+    @Override
     public PostResponseDto createPost(PostRequestDto post) {
         Integer postNewId = postRepository.findAll().size() + 1;
         Integer userId = post.getUserId();
