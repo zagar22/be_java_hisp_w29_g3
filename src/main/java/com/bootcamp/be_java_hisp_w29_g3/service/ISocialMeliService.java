@@ -9,7 +9,7 @@ import java.util.List;
 public interface ISocialMeliService {
     FollowDto followSeller(int userId, int userIdToFollow);
     UnfollowDto unfollowSeller(int userId, int userIdToUnfollow);
-    BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId);
+    BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order);
     PromoProductDto getPromoProducts(Integer userId);
     UserFollowersDTO getFollowers(int sellerId, String order);
     PostResponseDto createPost(PostRequestDto post);

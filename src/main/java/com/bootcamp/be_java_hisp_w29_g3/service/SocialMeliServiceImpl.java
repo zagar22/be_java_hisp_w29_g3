@@ -79,12 +79,12 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     }
 
     @Override
-    public BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId) {
+    public BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order) {
         Buyer buyer = userRepository.getBuyerById(buyerId);
         if (buyer == null){
             throw new NotFoundException("No existe el usuario");
         }
-        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(buyerId);
+        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(buyerId, order);
         if (sellers.isEmpty()){
             throw new NotFoundException("El usuario no sigue vendedores");
         }
@@ -149,7 +149,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
 
     @Override
     public PostsByUserResponseDto searchPostsByUserIdInLastTwoWeeks(Integer userId, String order) {
-        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId);
+        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId,null);
         if(sellers.isEmpty())
             throw new NotFoundException("El usuario no sigue vendedores");
 
