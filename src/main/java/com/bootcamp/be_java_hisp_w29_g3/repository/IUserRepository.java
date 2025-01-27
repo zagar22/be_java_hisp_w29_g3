@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IUserRepository {
-    List<Seller> getSellersFollowedByBuyer(int buyerId);
+    List<Seller> getSellersFollowedByBuyer(int buyerId, String order);
     Long countPromotionalProductsBySeller(int sellerId);
     void followSeller(int userId, int userIdToFollow);
     void unfollowSeller(int userId, int userIdToUnfollow);

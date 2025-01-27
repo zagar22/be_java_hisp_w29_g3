@@ -142,11 +142,24 @@ public class UserRepositoryImpl implements IUserRepository {
         return sellers.get(userId);
     }
 
+    /* Se agrego el ordenamiento del punto 8
     public List<Seller> getSellersFollowedByBuyer(int userId) {
         Buyer buyer = buyers.get(userId);
         return buyer != null ? buyer.getSellers() : new ArrayList<>();
+    }*/
+    @Override
+    public List<Seller> getSellersFollowedByBuyer(int userId, String order) {
+        Buyer buyer = buyers.get(userId);
+        List<Seller> sellers = buyer.getSellers();
+        if ("name_asc".equalsIgnoreCase(order)) {
+            sellers.sort(Comparator.comparing(Seller::getName));
+        } else if ("name_desc".equalsIgnoreCase(order)) {
+            sellers.sort(Comparator.comparing(Seller::getName).reversed());
+        }
+        return sellers;
     }
 
+    @Override
     public Long countPromotionalProductsBySeller(int sellerId) {
         Seller seller = sellers.get(sellerId);
         if (seller != null) {
