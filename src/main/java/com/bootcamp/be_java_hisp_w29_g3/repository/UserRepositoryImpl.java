@@ -222,9 +222,9 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     private Comparator<Post> getPostDateComparator(String order){
-        if(order == null || order.equalsIgnoreCase("date_asc")) {
-            return Comparator.comparing(Post::getDate);
+        if(order == null || order.equalsIgnoreCase("date_desc")) {
+            return Comparator.comparing(Post::getDate).reversed();
         }
-        return Comparator.comparing(Post::getDate).reversed();
+        return Comparator.comparing(Post::getDate);
     }
 }
