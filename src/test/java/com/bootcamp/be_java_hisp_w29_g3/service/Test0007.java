@@ -16,6 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 public class Test0007 {
     @Mock
@@ -35,16 +39,16 @@ public class Test0007 {
 
         FollowerCountDTO expected = new FollowerCountDTO(sellerId,sellerName, (long) buyerList.size());
 
-        Mockito.when(userRepository.existsSellerById(sellerId)).thenReturn(true);
-        Mockito.when(userRepository.getSellerById(sellerId)).thenReturn(seller);
-        Mockito.when(userRepository.getBuyersFollowingSeller(sellerId)).thenReturn(buyerList);
+        when(userRepository.existsSellerById(sellerId)).thenReturn(true);
+        when(userRepository.getSellerById(sellerId)).thenReturn(seller);
+        when(userRepository.getBuyersFollowingSeller(sellerId)).thenReturn(buyerList);
 
         //act
 
         FollowerCountDTO obtained = service.calculateSellerFollowerCount(sellerId);
 
         //assert
-        Assertions.assertEquals(expected,obtained);
+        assertEquals(expected,obtained);
     }
 
     @Test
@@ -52,10 +56,10 @@ public class Test0007 {
         //arrange
         Integer sellerId = 1;
 
-        Mockito.when(userRepository.existsSellerById(sellerId)).thenReturn(false);
+        when(userRepository.existsSellerById(sellerId)).thenReturn(false);
 
         //act & assert
-        Assertions.assertThrows(NotFoundException.class, () -> service.calculateSellerFollowerCount(sellerId));
+        assertThrows(NotFoundException.class, () -> service.calculateSellerFollowerCount(sellerId));
     }
 
     @Test
@@ -69,15 +73,15 @@ public class Test0007 {
 
         FollowerCountDTO expected = new FollowerCountDTO(sellerId,sellerName, (long) buyerList.size());
 
-        Mockito.when(userRepository.existsSellerById(sellerId)).thenReturn(true);
-        Mockito.when(userRepository.getSellerById(sellerId)).thenReturn(seller);
-        Mockito.when(userRepository.getBuyersFollowingSeller(sellerId)).thenReturn(buyerList);
+        when(userRepository.existsSellerById(sellerId)).thenReturn(true);
+        when(userRepository.getSellerById(sellerId)).thenReturn(seller);
+        when(userRepository.getBuyersFollowingSeller(sellerId)).thenReturn(buyerList);
 
         //act
         FollowerCountDTO obtained = service.calculateSellerFollowerCount(sellerId);
 
         //assert
-        Assertions.assertEquals(expected,obtained);
+        assertEquals(expected,obtained);
     }
 
 
