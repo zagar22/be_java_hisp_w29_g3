@@ -13,16 +13,5 @@ public class FollowerCountDTO {
     private Integer userId;
     private String userName;
     private Long followersCount;
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        FollowerCountDTO that = (FollowerCountDTO) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(userName, that.userName) && Objects.equals(followersCount, that.followersCount);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, userName, followersCount);
-    }
+    
 }
