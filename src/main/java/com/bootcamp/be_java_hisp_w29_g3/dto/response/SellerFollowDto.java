@@ -11,8 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class SellerFollowDto {
     private Integer userId;
-
-    @NotEmpty(message = "El nombre de usuario no puede estar vació")
-    @Size(max = 15, message = "El nombre de usuario no púede tener mas de 15 caracteres")
     private String userName;
 }

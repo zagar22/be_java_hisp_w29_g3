@@ -1,8 +1,7 @@
-package com.bootcamp.be_java_hisp_w29_g3.dto;
+package com.bootcamp.be_java_hisp_w29_g3.dto.request;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.SellerFollowDto;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

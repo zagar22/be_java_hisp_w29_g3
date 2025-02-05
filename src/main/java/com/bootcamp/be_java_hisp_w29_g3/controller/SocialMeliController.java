@@ -1,6 +1,6 @@
 package com.bootcamp.be_java_hisp_w29_g3.controller;
 
-import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
