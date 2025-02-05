@@ -10,11 +10,11 @@ import java.util.List;
 public interface IUserRepository {
     List<Seller> getSellersFollowedByBuyer(int buyerId, String order);
     Long countPromotionalProductsBySeller(int sellerId);
-    void followSeller(int userId, int userIdToFollow);
-    void unfollowSeller(int userId, int userIdToUnfollow);
-    boolean existsSellerById(int userIdToFollow);
-    boolean existsBuyerById(int userId);
-    boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow);
+    void followSeller(Integer userId, Integer userIdToFollow);
+    void unfollowSeller(Integer userId, Integer userIdToUnfollow);
+    boolean existsSellerById(Integer userIdToFollow);
+    boolean existsBuyerById(Integer userId);
+    boolean buyerAlreadyFollowsSeller(Integer userId, Integer userIdToFollow);
     Buyer getBuyerById(Integer userId);
     Post addPostToSeller(Integer userId, Post newPost);
     List<Buyer> getBuyersFollowingSeller(Integer sellerId);
