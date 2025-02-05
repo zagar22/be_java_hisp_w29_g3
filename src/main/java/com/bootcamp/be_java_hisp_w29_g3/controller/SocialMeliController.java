@@ -1,9 +1,10 @@
 package com.bootcamp.be_java_hisp_w29_g3.controller;
 
-import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class SocialMeliController {
 
     // UH 11
     @GetMapping("/products/promo-post/count")
-    public ResponseEntity<PromoProductDto> getPromoProducts(@RequestParam Integer user_id){
+    public ResponseEntity<PromoProductDto> getPromoProducts(@RequestParam @Positive(message = "El id debe ser mayor a 0") Integer user_id){
         return new ResponseEntity<>(socialMeliService.getPromoProducts(user_id),HttpStatus.OK);
     }
 
