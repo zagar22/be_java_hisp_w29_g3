@@ -80,5 +80,45 @@ public class SocialMeliControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("El usuario ya no sigue al vendedor"));
     }
 
+    @Test
+    @DisplayName("UH-4: DESC")
+    void getSellersFollowedByBuyerTestDESC() throws Exception {
+        Integer userId = 1;
+        String order = "name_desc";
+
+        mockMvc.perform(get("/users/{userId}/followed/list", userId)
+                        .param("order", order)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.user_id").value(userId))
+                .andExpect(jsonPath("$.user_name").value("Comprador X"))
+                .andExpect(jsonPath("$.followed[0].user_id").value(2))
+                .andExpect(jsonPath("$.followed[0].user_name").value("Vendedor B"))
+                .andExpect(jsonPath("$.followed[1].user_id").value(1))
+                .andExpect(jsonPath("$.followed[1].user_name").value("Vendedor A"));
+    }
+
+    @Test
+    @DisplayName("UH-4: ASC")
+    void getSellersFollowedByBuyerTestASC() throws Exception {
+        Integer userId = 1;
+        String order = "asc";
+
+        mockMvc.perform(get("/users/{userId}/followed/list", userId)
+                        .param("order", order)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.user_id").value(userId))
+                .andExpect(jsonPath("$.user_name").value("Comprador X"))
+                .andExpect(jsonPath("$.followed[0].user_id").value(1))
+                .andExpect(jsonPath("$.followed[0].user_name").value("Vendedor A"))
+                .andExpect(jsonPath("$.followed[1].user_id").value(2))
+                .andExpect(jsonPath("$.followed[1].user_name").value("Vendedor B"));
+    }
+
 
 }
