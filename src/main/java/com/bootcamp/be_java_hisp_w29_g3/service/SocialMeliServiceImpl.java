@@ -35,48 +35,46 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     @Override
     public FollowDto followSeller(int userId, int userIdToFollow) {
         //Verifico existencia de vendedor
-        if(userRepository.existsSellerById(userIdToFollow)){
-            //Verifico existencia de comprador
-            if(userRepository.existsBuyerById(userId)){
-                //Verifico si ya se siguen
-                if(!userRepository.buyerAlreadyFollowsSeller(userId,userIdToFollow)){
-                    userRepository.followSeller(userId,userIdToFollow);
-                    return new FollowDto("Vendedor seguido correctamente");
-                }else{
-                    throw new BadRequestException("El usuario ya sigue al vendedor");
-                }
-
-            }else{
-                throw new BadRequestException("No existe el usuario");
-            }
-
-        }else{
-            throw new BadRequestException("No existe el vendedor");
+        if(!userRepository.existsSellerById(userIdToFollow)){
+            throw new NotFoundException("No existe el vendedor");
         }
+
+        //Verifico existencia de comprador
+        if(!userRepository.existsBuyerById(userId)){
+            throw new NotFoundException("No existe el usuario");
+        }
+
+        //Verifico si ya se siguen
+        if(userRepository.buyerAlreadyFollowsSeller(userId,userIdToFollow)){
+            throw new BadRequestException("El usuario ya sigue al vendedor");
+        }
+
+        userRepository.followSeller(userId,userIdToFollow);
+        return new FollowDto("Vendedor seguido correctamente");
     }
 
     @Override
     public UnfollowDto unfollowSeller(int userId, int userIdToUnfollow) {
+
         //Verifico existencia de vendedor
-        if(userRepository.existsSellerById(userIdToUnfollow)){
-            //Verifico existencia de comprador
-            if(userRepository.existsBuyerById(userId)){
-                //Verifico si ya se siguen
-                if(userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnfollow)){
-                    userRepository.unfollowSeller(userId,userIdToUnfollow);
-                    return new UnfollowDto("El usuario ya no sigue al vendedor");
-                }else{
-                    throw new BadRequestException("El usuario no sigue al vendedor");
-                }
-
-            }else{
-                throw new BadRequestException("No existe el usuario");
-            }
-
-        }else{
-            throw new BadRequestException("No existe el vendedor");
+        if(!userRepository.existsSellerById(userIdToUnfollow)){
+            throw new NotFoundException("No existe el vendedor");
         }
+
+        //Verifico existencia de comprador
+        if(!userRepository.existsBuyerById(userId)){
+            throw new NotFoundException("No existe el usuario");
+        }
+
+        //Verifico si ya se siguen
+        if(!userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnfollow)){
+            throw new BadRequestException("El usuario no sigue al vendedor");
+        }
+
+        userRepository.unfollowSeller(userId,userIdToUnfollow);
+        return new UnfollowDto("El usuario ya no sigue al vendedor");
     }
+
 
     @Override
     public BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order) {
