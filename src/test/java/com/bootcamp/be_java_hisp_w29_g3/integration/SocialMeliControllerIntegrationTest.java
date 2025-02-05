@@ -27,8 +27,6 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     void getPromoProductsTest() throws Exception {
         Integer userId = 1;
-        PromoProductDto promoProductDto = new PromoProductDto(userId,"Vendedor A",2L);
-        Long promoProductCount = 5L;
         mockMvc.perform(get("/products/promo-post/count")
                         .param("user_id", String.valueOf(userId))
                         .contentType(MediaType.APPLICATION_JSON))
