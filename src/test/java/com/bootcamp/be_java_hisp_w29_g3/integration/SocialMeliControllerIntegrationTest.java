@@ -3,6 +3,7 @@ package com.bootcamp.be_java_hisp_w29_g3.integration;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,6 +33,29 @@ public class SocialMeliControllerIntegrationTest {
                 .andExpect(jsonPath("$.user_id").value(userId))
                 .andExpect(jsonPath("$.user_name").value("Vendedor A"))
                 .andExpect(jsonPath("$.promo_products_count").value(1L));
+    }
+
+    @DisplayName("US-0002 - Happy path")
+    @Test
+    void getSellerFollowerCountTest() throws Exception {
+        Integer sellerId = 1;
+        String userName = "Vendedor A";
+        Integer followersCount = 2;
+        mockMvc.perform(get("/users/{sellerId}/followers/count", sellerId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.user_id").value(sellerId))
+                .andExpect(jsonPath("$.user_name").value(userName))
+                .andExpect(jsonPath("$.followers_count").value(followersCount));
+    }
+    @DisplayName("US-0002 - Seller not found")
+    @Test
+    void getSellerFollowerCountTestSadPath() throws Exception {
+        Integer sellerId = 3;
+        mockMvc.perform(get("/users/{sellerId}/followers/count", sellerId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 
