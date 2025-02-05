@@ -12,7 +12,6 @@ import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w29_g3.repository.IUserRepository;
-import com.bootcamp.be_java_hisp_w29_g3.repository.UserRepositoryImpl;
 import com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     private final IPostRepository postRepository;
 
     @Override
-    public FollowDto followSeller(int userId, int userIdToFollow) {
+    public FollowDto followSeller(Integer userId, Integer userIdToFollow) {
         //Verifico existencia de vendedor
         if(!userRepository.existsSellerById(userIdToFollow)){
             throw new NotFoundException("No existe el vendedor");
@@ -54,7 +53,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     }
 
     @Override
-    public UnfollowDto unfollowSeller(int userId, int userIdToUnfollow) {
+    public UnfollowDto unfollowSeller(Integer userId, Integer userIdToUnfollow) {
 
         //Verifico existencia de vendedor
         if(!userRepository.existsSellerById(userIdToUnfollow)){
@@ -135,7 +134,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         }
     }
 
-    public UserFollowersDTO getFollowers(int sellerId, String order) {
+    public UserFollowersDTO getFollowers(Integer sellerId, String order) {
         if (!userRepository.existsSellerById(sellerId)) {
             throw new NotFoundException("No existe el vendedor");
         }
@@ -174,7 +173,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
             for (Post post : seller.getPosts()) {
                 if (post.getPrice() >= minPrice && post.getPrice() <= maxPrice) {
                     if (Objects.equals(post.getProduct().getName(), product)) {
-                        int sellerId = seller.getId();
+                        Integer sellerId = seller.getId();
                         String sellerName = seller.getName();
                         Product prod = post.getProduct();
                         Double price = post.getPrice();

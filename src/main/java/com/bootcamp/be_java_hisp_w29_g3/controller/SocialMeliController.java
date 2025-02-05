@@ -4,14 +4,17 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
+@Validated
 public class SocialMeliController {
     private final ISocialMeliService socialMeliService;
 
@@ -22,19 +25,19 @@ public class SocialMeliController {
 
     //UH 1
     @PostMapping("/users/{userId}/follow/{userIdToFollow}")
-    public ResponseEntity<FollowDto> followSeller(@PathVariable int userId, @PathVariable int userIdToFollow){
+    public ResponseEntity<FollowDto> followSeller(@PathVariable @Positive(message = "El id debe ser mayor a 0") Integer userId, @PathVariable @Positive(message = "El id debe ser mayor a 0") Integer userIdToFollow){
         return new ResponseEntity<>(socialMeliService.followSeller(userId,userIdToFollow),HttpStatus.OK);
     }
 
     //UH 7
     @PostMapping("/users/{userId}/unfollow/{userIdToUnfollow}")
-    public ResponseEntity<UnfollowDto> unFollowSeller(@PathVariable int userId, @PathVariable int userIdToUnfollow){
+    public ResponseEntity<UnfollowDto> unFollowSeller(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId, @PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userIdToUnfollow){
         return new ResponseEntity<>(socialMeliService.unfollowSeller(userId,userIdToUnfollow),HttpStatus.OK);
     }
 
     //UH 4
     @GetMapping("/users/{userId}/followed/list")
-    public ResponseEntity<BuyerFollowedSellersDto>  getSellersFollowedByBuyer(@PathVariable Integer userId,@RequestParam(required = false, defaultValue = "") String order) {
+    public ResponseEntity<BuyerFollowedSellersDto>  getSellersFollowedByBuyer(@PathVariable @Positive(message = "El id debe ser mayor a 0") Integer userId,@RequestParam(required = false, defaultValue = "") String order) {
         return new ResponseEntity<>(socialMeliService.getUserFollowSellers(userId,order),HttpStatus.OK) ;
     }
 
@@ -46,7 +49,7 @@ public class SocialMeliController {
 
     //UH 2
     @GetMapping("/users/{sellerId}/followers/count")
-    public ResponseEntity<FollowerCountDTO> getSellerFollowerCount(@PathVariable Integer sellerId){
+    public ResponseEntity<FollowerCountDTO> getSellerFollowerCount(@PathVariable @Positive(message = "El id debe ser mayor a 0") Integer sellerId){
         return new ResponseEntity<>(socialMeliService.calculateSellerFollowerCount(sellerId),HttpStatus.OK);
     }
 
@@ -64,13 +67,13 @@ public class SocialMeliController {
 
     //UH 3 y 8
     @GetMapping("/{userId}/followers/list")
-    public ResponseEntity<UserFollowersDTO> getFollowers(@PathVariable int userId, @RequestParam(required = false, defaultValue = "") String order) {
+    public ResponseEntity<UserFollowersDTO> getFollowers(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId, @RequestParam(required = false, defaultValue = "") String order) {
         return new ResponseEntity<>(socialMeliService.getFollowers(userId, order), HttpStatus.OK);
     }
 
     //UH 6 y 9
     @GetMapping("products/followed/{userId}/list")
-    public ResponseEntity<PostsByUserResponseDto> getFollowers(@PathVariable Integer userId,
+    public ResponseEntity<PostsByUserResponseDto> getFollowersInLastTwoWeeks(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId,
                                                                @RequestParam(required = false) String order) {
         return new ResponseEntity<>(socialMeliService.searchPostsByUserIdInLastTwoWeeks(userId, order), HttpStatus.OK);
     }
