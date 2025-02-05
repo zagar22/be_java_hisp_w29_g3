@@ -7,11 +7,11 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import java.util.List;
 
 public interface ISocialMeliService {
-    FollowDto followSeller(int userId, int userIdToFollow);
-    UnfollowDto unfollowSeller(int userId, int userIdToUnfollow);
+    FollowDto followSeller(Integer userId, Integer userIdToFollow);
+    UnfollowDto unfollowSeller(Integer userId, Integer userIdToUnfollow);
     BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order);
     PromoProductDto getPromoProducts(Integer userId);
-    UserFollowersDTO getFollowers(int sellerId, String order);
+    UserFollowersDTO getFollowers(Integer sellerId, String order);
     PostResponseDto createPost(PostRequestDto post);
     FollowerCountDTO calculateSellerFollowerCount(Integer sellerId);
     List<FollowerCountDTO> getSellersByFollowerCount();
