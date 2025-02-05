@@ -106,7 +106,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
     @Override
     public FollowerCountDTO calculateSellerFollowerCount(Integer sellerId) {
         if (! userRepository.existsSellerById(sellerId)){
-            throw new BadRequestException("No existe el vendedor");
+            throw new NotFoundException("No existe el usuario");
         }
         return new FollowerCountDTO(sellerId,
                 userRepository.getSellerById(sellerId).getName(),
