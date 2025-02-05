@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -22,6 +23,7 @@ public class SocialMeliControllerIntegrationTest {
     MockMvc mockMvc;
 
     @Test
+    @DisplayName("US-0011")
     void getPromoProductsTest() throws Exception {
         Integer userId = 1;
         mockMvc.perform(get("/products/promo-post/count")
@@ -34,6 +36,7 @@ public class SocialMeliControllerIntegrationTest {
                 .andExpect(jsonPath("$.user_name").value("Vendedor A"))
                 .andExpect(jsonPath("$.promo_products_count").value(1L));
     }
+
 
     @DisplayName("US-0002 - Happy path")
     @Test
@@ -56,6 +59,25 @@ public class SocialMeliControllerIntegrationTest {
         mockMvc.perform(get("/users/{sellerId}/followers/count", sellerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @DisplayName("US-0001")
+    void followSellerTest() throws Exception{
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}",2, 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Vendedor seguido correctamente"));
+    }
+
+    @Test
+    @DisplayName("US-0007")
+    void unfollowSellerTest() throws Exception{
+        mockMvc.perform(post("/users/{userId}/unfollow/{userIdToUnfollow}",1, 2))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("El usuario ya no sigue al vendedor"));
     }
 
 
