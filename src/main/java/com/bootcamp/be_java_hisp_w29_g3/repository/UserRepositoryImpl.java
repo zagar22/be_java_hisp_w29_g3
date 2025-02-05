@@ -105,31 +105,31 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public void followSeller(int userId, int userIdToFollow) {
+    public void followSeller(Integer userId, Integer userIdToFollow) {
         buyers.get(userId).getSellers().add(sellers.get(userIdToFollow));
     }
 
     @Override
-    public void unfollowSeller(int userId, int userIdToUnfollow) {
-        buyers.get(userId).getSellers().removeIf(seller -> seller.getId() == userIdToUnfollow);
+    public void unfollowSeller(Integer userId, Integer  userIdToUnfollow) {
+        buyers.get(userId).getSellers().removeIf(seller -> seller.getId().equals(userIdToUnfollow));
     }
 
     //Verifico si existe el vendedor
     @Override
-    public boolean existsSellerById(int userIdToFollow) {
+    public boolean existsSellerById(Integer userIdToFollow) {
         return sellers.containsKey(userIdToFollow);
     }
 
     //Verifico si existe el comprador
     @Override
-    public boolean existsBuyerById(int userId) {
+    public boolean existsBuyerById(Integer userId) {
         return buyers.containsKey(userId);
     }
 
     //Verifico si el comprador ya seguia al vendedor
     @Override
-    public boolean buyerAlreadyFollowsSeller(int userId, int userIdToFollow) {
-        return buyers.get(userId).getSellers().stream().anyMatch(seller -> seller.getId() == userIdToFollow);
+    public boolean buyerAlreadyFollowsSeller(Integer userId, Integer userIdToFollow) {
+        return buyers.get(userId).getSellers().stream().anyMatch(seller -> seller.getId().equals(userIdToFollow));
     }
 
     @Override
