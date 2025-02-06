@@ -63,7 +63,7 @@ class SocialMeliServiceImplTest {
         //Arrange
         Integer userId = 2;
         Integer userIdToFollow = 10;
-        when(userRepository.existsSellerById(userIdToFollow)).thenReturn(false);
+        when(userRepository.existsSellerById(anyInt())).thenReturn(false);
 
         //Assert + Act
         assertThrows(NotFoundException.class,()-> socialMeliService.followSeller(userId,userIdToFollow));
@@ -88,9 +88,9 @@ class SocialMeliServiceImplTest {
         //Arrange
         Integer userId = 2;
         Integer userIdToFollow = 1;
-        when(userRepository.existsSellerById(userIdToFollow)).thenReturn(true); //Necesito que pase este, asi va a la siguiente linea
-        when(userRepository.existsBuyerById(userId)).thenReturn(true);
-        when(userRepository.buyerAlreadyFollowsSeller(userId,userIdToFollow)).thenReturn(true);
+        when(userRepository.existsSellerById(anyInt())).thenReturn(true); //Necesito que pase este, asi va a la siguiente linea
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
+        when(userRepository.buyerAlreadyFollowsSeller(anyInt(),anyInt())).thenReturn(true);
 
         //Assert + Act
         assertThrows(BadRequestException.class,()-> socialMeliService.followSeller(userId,userIdToFollow));
@@ -121,7 +121,7 @@ class SocialMeliServiceImplTest {
         //Arrange
         Integer userId = 2;
         Integer userIdToUnFollow = 10;
-        when(userRepository.existsSellerById(userIdToUnFollow)).thenReturn(false);
+        when(userRepository.existsSellerById(anyInt())).thenReturn(false);
 
         //Assert + Act
         assertThrows(NotFoundException.class,()-> socialMeliService.unfollowSeller(userId,userIdToUnFollow));
@@ -133,8 +133,10 @@ class SocialMeliServiceImplTest {
         //Arrange
         Integer userId = 2;
         Integer userIdToUnFollow = 10;
-        when(userRepository.existsSellerById(userIdToUnFollow)).thenReturn(true); //Necesito que pase este, asi va a la siguiente linea
-        when(userRepository.existsBuyerById(userId)).thenReturn(false);
+        when(userRepository.existsSellerById(anyInt())).thenReturn(true); //Necesito que pase este, asi va a la siguiente linea
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(false);
+
+
 
         //Assert + Act
         assertThrows(NotFoundException.class,()-> socialMeliService.followSeller(userId,userIdToUnFollow));
@@ -146,9 +148,9 @@ class SocialMeliServiceImplTest {
         //Arrange
         Integer userId = 2;
         Integer userIdToUnFollow = 10;
-        when(userRepository.existsSellerById(userIdToUnFollow)).thenReturn(true); //Necesito que pase este, asi va a la siguiente linea
-        when(userRepository.existsBuyerById(userId)).thenReturn(true);
-        when(userRepository.buyerAlreadyFollowsSeller(userId,userIdToUnFollow)).thenReturn(false);
+        when(userRepository.existsSellerById(anyInt())).thenReturn(true); //Necesito que pase este, asi va a la siguiente linea
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
+        when(userRepository.buyerAlreadyFollowsSeller(anyInt(),anyInt())).thenReturn(false);
 
         //Assert + Act
         assertThrows(BadRequestException.class,()-> socialMeliService.unfollowSeller(userId,userIdToUnFollow));
