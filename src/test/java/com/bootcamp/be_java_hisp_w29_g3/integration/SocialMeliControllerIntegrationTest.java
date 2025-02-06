@@ -1,18 +1,12 @@
 package com.bootcamp.be_java_hisp_w29_g3.integration;
 
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
-import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
-import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -20,11 +14,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SocialMeliControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
     @Test
+    @Order(1)
     @DisplayName("US-0011 (Productos con descuento)")
     void getPromoProductsTest() throws Exception {
         Integer userId = 1;
@@ -52,6 +48,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @DisplayName("US-0002 - Happy path")
     @Test
+    @Order(2)
     void getSellerFollowerCountTest() throws Exception {
         Integer sellerId = 1;
         String userName = "Vendedor A";
@@ -64,6 +61,7 @@ public class SocialMeliControllerIntegrationTest {
                 .andExpect(jsonPath("$.user_name").value(userName))
                 .andExpect(jsonPath("$.followers_count").value(followersCount));
     }
+
     @DisplayName("US-0002 - Seller not found")
     @Test
     void getSellerFollowerCountTestSadPath() throws Exception {
@@ -196,5 +194,50 @@ public class SocialMeliControllerIntegrationTest {
                         .andDo(print())
                         .andExpect(status().isNotFound());
     }
+    @Test
+    @DisplayName("US-0006 - Order default")
+    void getPostsByUserIdInLastTwoWeeksTest() throws Exception{
+        mockMvc.perform(get("/products/followed/{userId}/list",1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.user_id").value(1))
+                .andExpect(jsonPath("$.posts[0].user_id").value(1))
+                .andExpect(jsonPath("$.posts[0].post_id").value(1))
+                .andExpect(jsonPath("$.posts[1].user_id").value(1))
+                .andExpect(jsonPath("$.posts[1].post_id").value(2));
+    }
 
+    @Test
+    @DisplayName("US-0006 - Seller NotFound")
+    void getPostsByUserIdInLastTwoWeeksSellerNotFoundTest() throws Exception{
+        mockMvc.perform(get("/products/followed/{userId}/list",100))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("No existe el usuario"));
+    }
+
+    @Test
+    @DisplayName("US-0009 - Order desc")
+    void getPostsByUserIdInLastTwoWeeksDescTest() throws Exception{
+        mockMvc.perform(get("/products/followed/{userId}/list?order=date_desc",1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.user_id").value(1))
+                .andExpect(jsonPath("$.posts[0].user_id").value(1))
+                .andExpect(jsonPath("$.posts[0].post_id").value(1))
+                .andExpect(jsonPath("$.posts[1].user_id").value(1))
+                .andExpect(jsonPath("$.posts[1].post_id").value(2));
+    }
+
+    @Test
+    @DisplayName("US-0009 - Order asc")
+    void getPostsByUserIdInLastTwoWeeksAscTest() throws Exception{
+        mockMvc.perform(get("/products/followed/{userId}/list?order=date_asc",1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.user_id").value(1))
+                .andExpect(jsonPath("$.posts[0].user_id").value(1))
+                .andExpect(jsonPath("$.posts[0].post_id").value(2))
+                .andExpect(jsonPath("$.posts[1].user_id").value(1))
+                .andExpect(jsonPath("$.posts[1].post_id").value(1));
+    }
 }

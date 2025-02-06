@@ -7,7 +7,10 @@ import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -37,11 +40,11 @@ public class UserRepositoryImpl implements IUserRepository {
         Product product4 = new Product(4, "Zapatos Adidas", "Ropa", "Adidas", "Rojo", "Zapatos cómodos para deporte");
 
         // Crear posts de prueba para vendedores
-        Post post1 = new Post(1, LocalDate.of(2025, 1, 21), product1, 1, 1000.0, true, 10.0);
-        Post post2 = new Post(2, LocalDate.of(2025, 1, 5), product2, 2, 600.0, false, 0.0);
+        Post post1 = new Post(1, LocalDate.now(), product1, 1, 1000.0, true, 10.0);
+        Post post2 = new Post(2, LocalDate.now().minusDays(2), product2, 2, 600.0, false, 0.0);
         Post post3 = new Post(3, LocalDate.of(2025, 1, 22), product3, 3, 30.0, true, 5.0);
         Post post4 = new Post(4, LocalDate.of(2025, 1, 23), product4, 3, 50.0, false, 0.0);
-        Post post5 = new Post(5, LocalDate.of(2025, 1, 24), product1, 3, 50.0, false, 0.0);
+        Post post5 = new Post(5, LocalDate.now().minusWeeks(3), product1, 3, 50.0, false, 0.0);
 
         // Crear listas de posts para vendedores
         List<Post> postsSellerA = new ArrayList<>();
@@ -223,18 +226,10 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public List<Post> findPostsFromSellerByUserIdWithLimitDate(Integer userId, LocalDate limitDate, String order) {
+    public List<Post> findPostsFromSellerByUserIdWithLimitDate(Integer userId, LocalDate limitDate) {
         return buyers.get(userId).getSellers().stream()
                 .flatMap(seller -> seller.getPosts().stream())
                 .filter(seller -> seller.getDate().isAfter(limitDate))
-                .sorted(getPostDateComparator(order))
                 .toList();
-    }
-
-    private Comparator<Post> getPostDateComparator(String order){
-        if(order == null || order.equalsIgnoreCase("date_desc")) {
-            return Comparator.comparing(Post::getDate).reversed();
-        }
-        return Comparator.comparing(Post::getDate);
     }
 }

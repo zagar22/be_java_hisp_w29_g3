@@ -4,7 +4,7 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,8 +74,9 @@ public class SocialMeliController {
 
     //UH 6 y 9
     @GetMapping("products/followed/{userId}/list")
-    public ResponseEntity<PostsByUserResponseDto> getFollowersInLastTwoWeeks(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId,
-                                                               @RequestParam(required = false) String order) {
+    public ResponseEntity<PostsByUserResponseDto> getPostsByUserIdInLastTwoWeeks(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId,
+                                                               @RequestParam(required = false, defaultValue = "date_desc")
+                                                               @Pattern(regexp = "^(date_asc|date_desc)$", message = "El valor del order debe ser 'date_asc' o 'date_desc'.") String order) {
         return new ResponseEntity<>(socialMeliService.searchPostsByUserIdInLastTwoWeeks(userId, order), HttpStatus.OK);
     }
 
