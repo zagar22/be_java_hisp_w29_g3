@@ -480,12 +480,10 @@ class SocialMeliServiceImplTest {
         //Arrange
         when(userRepository.existsBuyerById(anyInt())).thenReturn(false);
 
-        // Act
+        // Act y Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () ->
                 socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc")
         );
-
-        // Assert
         assertEquals("No existe el usuario", exception.getMessage());
     }
 
@@ -498,12 +496,10 @@ class SocialMeliServiceImplTest {
         when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
         when(userRepository.getSellersFollowedByBuyer(anyInt())).thenReturn(sellers);
 
-        // Act
+        // Act y Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () ->
                 socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc")
         );
-
-        // Assert
         assertEquals("El usuario no sigue vendedores", exception.getMessage());
     }
 
@@ -516,12 +512,10 @@ class SocialMeliServiceImplTest {
         when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
         when(userRepository.getSellersFollowedByBuyer(anyInt())).thenReturn(sellers);
 
-        // Act
+        // Act y Assert
         NotFoundException exception = assertThrows(NotFoundException.class, () ->
                 socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc")
         );
-
-        // Assert
         assertEquals("No hay posts para mostrar", exception.getMessage());
     }
 }
