@@ -47,6 +47,7 @@ public class SocialMeliControllerIntegrationTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("US-0011 (Productos con descuento) no encuentra el id")
     void getPromoProductsBadTest() throws Exception {
         Integer userId = 9887;
@@ -59,7 +60,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @DisplayName("US-0002 - Happy path")
     @Test
-    @Order(2)
+    @Order(3)
     void getSellerFollowerCountTest() throws Exception {
         Integer sellerId = 1;
         String userName = "Vendedor A";
@@ -75,8 +76,9 @@ public class SocialMeliControllerIntegrationTest {
 
     @DisplayName("US-0002 - Seller not found")
     @Test
+    @Order(4)
     void getSellerFollowerCountTestSadPath() throws Exception {
-        Integer sellerId = 3;
+        Integer sellerId = 4540;
         mockMvc.perform(get("/users/{sellerId}/followers/count", sellerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -85,6 +87,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0001 - Happy Path")
+    @Order(19)
     void followSellerTest() throws Exception{
         mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}",2, 1))
                 .andExpect(status().isOk())
@@ -94,6 +97,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0001 - NotFound Exception when Buyer not exist")
+    @Order(5)
     void unfollowSellerNotFoundWhenBuyerNotExistTest() throws Exception{
         mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}",30, 2))
                 .andExpect(status().isNotFound())
@@ -103,6 +107,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0007 - Happy Path")
+    @Order(20)
     void unfollowSellerTest() throws Exception{
         mockMvc.perform(post("/users/{userId}/unfollow/{userIdToUnfollow}",1, 2))
                 .andExpect(status().isOk())
@@ -112,6 +117,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0007 - NotFound Exception when Seller not exist")
+    @Order(6)
     void unfollowSellerNotFoundWhenSellerNotExistTest() throws Exception{
         mockMvc.perform(post("/users/{userId}/unfollow/{userIdToUnfollow}",1, 50))
                 .andExpect(status().isNotFound())
@@ -121,6 +127,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("UH-4: DESC (lista de seguidores del comprador)")
+    @Order(7)
     void getSellersFollowedByBuyerTestDESC() throws Exception {
         Integer userId = 1;
         String order = "name_desc";
@@ -141,6 +148,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("UH-4: ASC")
+    @Order(8)
     void getSellersFollowedByBuyerTestASC() throws Exception {
         Integer userId = 1;
         String order = "name_asc";
@@ -161,6 +169,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("UH-3: Obtener lista de seguidores de un vendedor en orden ASC")
+    @Order(9)
     void getSellerFollowersTestASC() throws Exception {
         Integer sellerId = 1;
         String order = "name_asc";
@@ -180,6 +189,7 @@ public class SocialMeliControllerIntegrationTest {
     }
     @Test
     @DisplayName("US-0005 - Crear un post")
+    @Order(21)
     void createPostTest() throws Exception{
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
@@ -210,6 +220,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0005 - Crear un post con datos inválidos (precio mayor que el máximo permitido)")
+    @Order(10)
     void createPostTest_InvalidPrice() throws Exception {
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
@@ -235,11 +246,12 @@ public class SocialMeliControllerIntegrationTest {
                         .content(jsonRequest))
                         .andDo(print())
                         .andExpect(status().isBadRequest())
-                        .andExpect(jsonPath("$.price").value("El precio máximo permitido es 10,000,000."));
+                        .andExpect(jsonPath("$.errors.price").value("El precio máximo permitido es 10,000,000."));
     }
 
     @Test
     @DisplayName("US-0010 - crear un post con promocion")
+    @Order(22)
     void createPromoPostTest() throws Exception{
         PostRequestDto postRequestDto = new PostRequestDto(
                 2,
@@ -270,6 +282,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("UH-3: Obtener lista de seguidores de un vendedor en orden DESC")
+    @Order(11)
     void getSellerFollowersTestDESC() throws Exception {
         Integer sellerId = 1;
         String order = "name_desc";
@@ -290,6 +303,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("UH-3: Vendedor existente sin seguidores")
+    @Order(12)
     void getSellerFollowersNoFollowersTest() throws Exception {
         Integer sellerId = 3; // id vendedor sin seguidores
 
@@ -304,6 +318,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("UH-3: Vendedor no encontrado")
+    @Order(13)
     void getSellerFollowersNotFoundTest() throws Exception {
         Integer sellerId = 999; // id no existe
 
@@ -315,6 +330,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0006 - Order default")
+    @Order(14)
     void getPostsByUserIdInLastTwoWeeksTest() throws Exception{
         mockMvc.perform(get("/products/followed/{userId}/list",1))
                 .andExpect(status().isOk())
@@ -328,6 +344,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0006 - Seller NotFound")
+    @Order(15)
     void getPostsByUserIdInLastTwoWeeksSellerNotFoundTest() throws Exception{
         mockMvc.perform(get("/products/followed/{userId}/list",100))
                 .andExpect(status().isNotFound())
@@ -336,6 +353,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0009 - Order desc")
+    @Order(16)
     void getPostsByUserIdInLastTwoWeeksDescTest() throws Exception{
         mockMvc.perform(get("/products/followed/{userId}/list?order=date_desc",1))
                 .andExpect(status().isOk())
@@ -349,6 +367,7 @@ public class SocialMeliControllerIntegrationTest {
 
     @Test
     @DisplayName("US-0009 - Order asc")
+    @Order(17)
     void getPostsByUserIdInLastTwoWeeksAscTest() throws Exception{
         mockMvc.perform(get("/products/followed/{userId}/list?order=date_asc",1))
                 .andExpect(status().isOk())
@@ -358,5 +377,14 @@ public class SocialMeliControllerIntegrationTest {
                 .andExpect(jsonPath("$.posts[0].post_id").value(2))
                 .andExpect(jsonPath("$.posts[1].user_id").value(1))
                 .andExpect(jsonPath("$.posts[1].post_id").value(1));
+    }
+
+    @Test
+    @DisplayName("US-0009 - Seller NotFound")
+    @Order(18)
+    void getPostsByUserIdInLastTwoWeeksSellerBadRequestTest() throws Exception{
+        mockMvc.perform(get("/products/followed/{userId}/list?order=descccc",100))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors['getPostsByUserIdInLastTwoWeeks.order']").value("El valor del order debe ser 'date_asc' o 'date_desc'."));
     }
 }

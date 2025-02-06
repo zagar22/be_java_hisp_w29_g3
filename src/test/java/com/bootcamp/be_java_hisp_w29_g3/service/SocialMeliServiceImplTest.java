@@ -1,6 +1,5 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
-import com.bootcamp.be_java_hisp_w29_g3.dto.UserDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
@@ -35,7 +34,7 @@ class SocialMeliServiceImplTest {
     SocialMeliServiceImpl socialMeliService;
 
     @Test
-    @DisplayName("US-0001 - Happy Path")
+    @DisplayName("US-0001 - Happy Path (T-0001)")
     void followSellerOkTest(){
         //Arrange
         Integer userId = 2;
@@ -54,7 +53,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0001 - NotFound Exception when Seller not exist")
+    @DisplayName("US-0001 - NotFound Exception when Seller not exist (T-0001)")
     void followSellerThrowNotFoundExceptionWhenSellerDoesNotExist(){
         //Arrange
         Integer userId = 2;
@@ -66,7 +65,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0001 - NotFound Exception when Buyer not exist")
+    @DisplayName("US-0001 - NotFound Exception when Buyer not exist (T-0001)")
     void followSellerThrowNotFoundExceptionWhenBuyerDoesNotExist(){
         //Arrange
         Integer userId = 2;
@@ -79,7 +78,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0001 - NotFound Exception when Buyer already follow Seller")
+    @DisplayName("US-0001 - NotFound Exception when Buyer already follow Seller (T-0001)")
     void followSellerThrowBadRequestExceptionWhenBuyerAlreadyFollowsSeller(){
         //Arrange
         Integer userId = 2;
@@ -93,7 +92,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0007 - Happy Path")
+    @DisplayName("US-0007 - Happy Path (T-0002)")
     void unfollowSellerOkTest(){
         //Arrange
         Integer userId = 2;
@@ -112,7 +111,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0007 - NotFound Exception when Seller not exist")
+    @DisplayName("US-0007 - NotFound Exception when Seller not exist (T-0002)")
     void unfollowSellerThrowNotFoundExceptionWhenSellerDoesNotExist(){
         //Arrange
         Integer userId = 2;
@@ -124,7 +123,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0007 - NotFound Exception when Buyer not exist")
+    @DisplayName("US-0007 - NotFound Exception when Buyer not exist (T-0002)")
     void unfollowSellerThrowNotFoundExceptionWhenBuyerDoesNotExist(){
         //Arrange
         Integer userId = 2;
@@ -139,7 +138,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("US-0007 - NotFound Exception when Buyer already follow Seller")
+    @DisplayName("US-0007 - NotFound Exception when Buyer already follow Seller (T-0002)")
     void unfollowSellerThrowBadRequestExceptionWhenBuyerAlreadyFollowsSeller(){
         //Arrange
         Integer userId = 2;
@@ -212,7 +211,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0003 - Verificar que el ordenamiento alfabético válido funciona correctamente")
+    @DisplayName("US-0008 - Verificar que el ordenamiento alfabético válido funciona correctamente (T-0003)")
     public void testGetFollowersWithValidOrder() {
         // Arrange
         List<Buyer> mockFollowerList = Arrays.asList(
@@ -248,7 +247,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0003 - Verificar que se lanza una excepción con ordenamiento inválido")
+    @DisplayName("US-0008 - Verificar que se lanza una excepción con ordenamiento inválido (T-0003)")
     public void testGetFollowersWithInvalidOrder() {
         // Arrange
         List<Buyer> mockFollowerList = Arrays.asList(
@@ -273,7 +272,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0003 - Verificar que el ordenamiento alfabético válido funciona correctamente en usuarios seguidos")
+    @DisplayName("US-0008 - Verificar que el ordenamiento alfabético válido funciona correctamente en usuarios seguidos (T-0003)")
     public void testGetFollowedSellersWithValidOrder() {
         // Arrange
         List<Seller> mockFollowedSellers = Arrays.asList(
@@ -303,7 +302,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0003 - Verificar que se lanza una excepción con ordenamiento inválido en usuarios seguidos")
+    @DisplayName("US-0008 - Verificar que se lanza una excepción con ordenamiento inválido en usuarios seguidos (T-0003)")
     public void testGetFollowedSellersWithInvalidOrder() {
         // Arrange
         List<Seller> mockFollowedSellers = Arrays.asList(
@@ -322,7 +321,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0004 - Validar el ordenamiento ascendente en seguidores")
+    @DisplayName("US-0008 - Validar el ordenamiento ascendente en seguidores (T-0004)")
     public void testGetFollowersWithAscendingOrder() {
         // Arrange
         List<Buyer> mockFollowerList = Arrays.asList(
@@ -353,7 +352,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0004 - Validar el ordenamiento descendente en seguidores")
+    @DisplayName("US-0008 - Validar el ordenamiento descendente en seguidores (T-0004)")
     public void testGetFollowersWithDescendingOrder() {
         // Arrange
         List<Buyer> mockFollowerList = Arrays.asList(
@@ -383,7 +382,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0004 - Validar el ordenamiento ascendente en usuarios seguidos")
+    @DisplayName("US-0008 - Validar el ordenamiento ascendente en usuarios seguidos (T-0004)")
     public void testGetFollowedSellersWithAscendingOrder() {
         // Arrange
         List<Seller> mockFollowedSellers = Arrays.asList(
@@ -407,7 +406,7 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
-    @DisplayName("T-0004 - Validar el ordenamiento descendente en usuarios seguidos")
+    @DisplayName("US-0008 - Validar el ordenamiento descendente en usuarios seguidos (T-0004)")
     public void testGetFollowedSellersWithDescendingOrder() {
         // Arrange
         List<Seller> mockFollowedSellers = Arrays.asList(

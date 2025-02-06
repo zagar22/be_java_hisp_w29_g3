@@ -39,7 +39,10 @@ public class SocialMeliController {
 
     //UH 4
     @GetMapping("/users/{userId}/followed/list")
-    public ResponseEntity<BuyerFollowedSellersDto>  getSellersFollowedByBuyer(@PathVariable @Positive(message = "El id debe ser mayor a 0") Integer userId,@RequestParam(required = false, defaultValue = "") String order) {
+    public ResponseEntity<BuyerFollowedSellersDto>  getSellersFollowedByBuyer(@PathVariable @Positive(message = "El id debe ser mayor a 0") Integer userId,
+                                                                              @RequestParam(required = false, defaultValue = "")
+                                                                              @Pattern(regexp = "^(name_asc|name_desc)?$", message = "El valor del order debe ser 'name_asc' o 'name_desc'.")
+                                                                              String order) {
         return new ResponseEntity<>(socialMeliService.getUserFollowSellers(userId,order),HttpStatus.OK) ;
     }
 
@@ -69,7 +72,10 @@ public class SocialMeliController {
 
     //UH 3 y 8
     @GetMapping("/{userId}/followers/list")
-    public ResponseEntity<UserFollowersDTO> getSellerFollowers(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId, @RequestParam(required = false, defaultValue = "") String order) {
+    public ResponseEntity<UserFollowersDTO> getSellerFollowers(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId,
+                                                               @RequestParam(required = false, defaultValue = "")
+                                                               @Pattern(regexp = "^(name_asc|name_desc)?$", message = "El valor del order debe ser 'name_asc' o 'name_desc'.")
+                                                               String order) {
         return new ResponseEntity<>(socialMeliService.getSellerFollowers(userId, order), HttpStatus.OK);
     }
 
