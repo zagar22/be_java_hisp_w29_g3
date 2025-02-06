@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IUserRepository {
-    List<Seller> getSellersFollowedByBuyer(int buyerId);
-    Long countPromotionalProductsBySeller(int sellerId);
+    List<Seller> getSellersFollowedByBuyer(Integer buyerId);
+    Long countPromotionalProductsBySeller(Integer sellerId);
     void followSeller(Integer userId, Integer userIdToFollow);
     void unfollowSeller(Integer userId, Integer userIdToUnfollow);
     boolean existsSellerById(Integer userIdToFollow);
@@ -19,7 +19,7 @@ public interface IUserRepository {
     Post addPostToSeller(Integer userId, Post newPost);
     List<Buyer> getBuyersFollowingSeller(Integer sellerId);
     Seller getSellerById(Integer id);
-    List<Buyer> getFollowers(int sellerId);
+    List<Buyer> getFollowers(Integer sellerId);
     List<Integer> getAllSellersId();
     List<Seller> getSellersByRangePrice(Double minPrice, Double maxPrice, String product);
     List<Post> findPostsFromSellerByUserIdWithLimitDate(Integer userId, LocalDate limitDate);

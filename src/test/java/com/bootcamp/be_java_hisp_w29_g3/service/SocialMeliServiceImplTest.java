@@ -473,4 +473,49 @@ class SocialMeliServiceImplTest {
         assertEquals(1, response.getPosts().getLast().getPostId());
 
     }
+
+    @Test
+    @DisplayName("US-0009 - Ordenamiento Descendente no se cumple (T-0006)")
+    void searchPostsByUserIdInLastTwoWeeksOrderDescWithInvalidBuyer() {
+        //Arrange
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(false);
+
+        // Act y Assert
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
+                socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc")
+        );
+        assertEquals("No existe el usuario", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("US-0009 - Ordenamiento Descendente no se cumple cuando el comprador no sigue vendedores (T-0006)")
+    void searchPostsByUserIdInLastTwoWeeksOrderWhenUserDoesNotFollowSellers() {
+        //Arrange
+        List<Seller> sellers = List.of();
+
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
+        when(userRepository.getSellersFollowedByBuyer(anyInt())).thenReturn(sellers);
+
+        // Act y Assert
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
+                socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc")
+        );
+        assertEquals("El usuario no sigue vendedores", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("US-0009 - Ordenamiento Descendente no se cumple cuando el comprador no sigue vendedores (T-0006)")
+    void searchPostsByUserIdInLastTwoWeeksOrderWhenNoPostsToDisplay() {
+        //Arrange
+        List<Seller> sellers = List.of(Seller.builder().build());
+
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
+        when(userRepository.getSellersFollowedByBuyer(anyInt())).thenReturn(sellers);
+
+        // Act y Assert
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
+                socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc")
+        );
+        assertEquals("No hay posts para mostrar", exception.getMessage());
+    }
 }

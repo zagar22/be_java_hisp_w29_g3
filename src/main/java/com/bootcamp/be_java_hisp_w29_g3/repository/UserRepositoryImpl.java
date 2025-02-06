@@ -154,13 +154,13 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public List<Seller> getSellersFollowedByBuyer(int userId) {
+    public List<Seller> getSellersFollowedByBuyer(Integer userId) {
         Buyer buyer = buyers.get(userId);
         return buyer != null ? buyer.getSellers() : new ArrayList<>();
     }
 
     @Override
-    public Long countPromotionalProductsBySeller(int sellerId) {
+    public Long countPromotionalProductsBySeller(Integer sellerId) {
         Seller seller = sellers.get(sellerId);
         if (seller != null) {
             return seller.getPosts().stream()
@@ -179,10 +179,10 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public List<Buyer> getFollowers(int sellerId) {
+    public List<Buyer> getFollowers(Integer sellerId) {
         List<Buyer> followers = buyers.values().stream()
                 .filter(buyer -> buyer.getSellers().stream()
-                        .anyMatch(seller -> seller.getId() == sellerId))
+                        .anyMatch(seller -> seller.getId().equals(sellerId)))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return followers;
