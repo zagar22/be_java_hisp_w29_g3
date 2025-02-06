@@ -154,7 +154,7 @@ public class SocialMeliControllerIntegrationTest {
         Integer sellerId = 1;
         String order = "name_asc";
 
-        mockMvc.perform(get("/sellers/{sellerId}/followers", sellerId)
+        mockMvc.perform(get("/{userId}/followers/list", sellerId)
                         .param("order", order)
                         .contentType(MediaType.APPLICATION_JSON))
                         .andDo(print())
@@ -162,10 +162,10 @@ public class SocialMeliControllerIntegrationTest {
                         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                         .andExpect(jsonPath("$.user_id").value(sellerId))
                         .andExpect(jsonPath("$.user_name").value("Vendedor A"))
-                        .andExpect(jsonPath("$.followers[0].user_id").value(2))
-                        .andExpect(jsonPath("$.followers[0].user_name").value("Comprador B"))
+                        .andExpect(jsonPath("$.followers[0].user_id").value(1))
+                        .andExpect(jsonPath("$.followers[0].user_name").value("Comprador X"))
                         .andExpect(jsonPath("$.followers[1].user_id").value(3))
-                        .andExpect(jsonPath("$.followers[1].user_name").value("Comprador C"));
+                        .andExpect(jsonPath("$.followers[1].user_name").value("Comprador Z"));
     }
 
     @Test
@@ -174,31 +174,31 @@ public class SocialMeliControllerIntegrationTest {
         Integer sellerId = 1;
         String order = "name_desc";
 
-        mockMvc.perform(get("/sellers/{sellerId}/followers", sellerId)
-                    .param("order", order)
-                    .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.user_id").value(sellerId))
-                    .andExpect(jsonPath("$.user_name").value("Vendedor A"))
-                    .andExpect(jsonPath("$.followers[0].user_id").value(3))
-                    .andExpect(jsonPath("$.followers[0].user_name").value("Comprador C"))
-                    .andExpect(jsonPath("$.followers[1].user_id").value(2))
-                    .andExpect(jsonPath("$.followers[1].user_name").value("Comprador B"));
+        mockMvc.perform(get("/{userId}/followers/list", sellerId)
+                        .param("order", order)
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(jsonPath("$.user_id").value(sellerId))
+                        .andExpect(jsonPath("$.user_name").value("Vendedor A"))
+                        .andExpect(jsonPath("$.followers[0].user_id").value(3))
+                        .andExpect(jsonPath("$.followers[0].user_name").value("Comprador Z"))
+                        .andExpect(jsonPath("$.followers[1].user_id").value(1))
+                        .andExpect(jsonPath("$.followers[1].user_name").value("Comprador X"));
     }
 
     @Test
-    @DisplayName("UH-3: Vendedor sin seguidores")
+    @DisplayName("UH-3: Vendedor existente sin seguidores")
     void getSellerFollowersNoFollowersTest() throws Exception {
-        Integer sellerId = 5; // Vendedor sin seguidores
+        Integer sellerId = 3; // id vendedor sin seguidores
 
-        mockMvc.perform(get("/sellers/{sellerId}/followers", sellerId)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/{userId}/followers/list", sellerId)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user_id").value(sellerId))
-                .andExpect(jsonPath("$.user_name").value("Vendedor X"))
+                .andExpect(jsonPath("$.user_name").value("Vendedor C"))
                 .andExpect(jsonPath("$.followers").isEmpty());
     }
 
@@ -212,6 +212,7 @@ public class SocialMeliControllerIntegrationTest {
                         .andDo(print())
                         .andExpect(status().isNotFound());
     }
+
     @Test
     @DisplayName("US-0006 - Order default")
     void getPostsByUserIdInLastTwoWeeksTest() throws Exception{

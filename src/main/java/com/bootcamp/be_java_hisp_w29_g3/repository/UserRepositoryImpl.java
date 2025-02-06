@@ -68,9 +68,17 @@ public class UserRepositoryImpl implements IUserRepository {
                 .posts(postsSellerB)
                 .build();
 
+        // Vendedor sin seguidores
+        Seller sellerC = Seller.builder()
+                .id(3)
+                .name("Vendedor C")
+                .posts(new ArrayList<>())
+                .build();
+
         // Añadir vendedores al mapa
         sellers.put(sellerA.getId(), sellerA);
         sellers.put(sellerB.getId(), sellerB);
+        sellers.put(sellerC.getId(), sellerC);
 
         // Crear compradores
         List<Seller> sellersBuyer1 = new ArrayList<>();
