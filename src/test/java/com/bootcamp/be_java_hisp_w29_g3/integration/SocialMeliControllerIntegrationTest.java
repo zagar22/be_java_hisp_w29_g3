@@ -1,14 +1,9 @@
 package com.bootcamp.be_java_hisp_w29_g3.integration;
 
-import org.junit.jupiter.api.*;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.ProductRequestDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
-import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +24,6 @@ public class SocialMeliControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     @Order(1)
@@ -183,6 +176,7 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     @DisplayName("US-0005 - Crear un post")
     void createPostTest() throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
                 LocalDate.of(2025, 2, 5), // date
@@ -213,6 +207,7 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     @DisplayName("US-0005 - Crear un post con datos inválidos (precio mayor que el máximo permitido)")
     void createPostTest_InvalidPrice() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
 
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
@@ -244,6 +239,7 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     @DisplayName("US-0010 - crear un post con promocion")
     void createPromoPostTest() throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
                 LocalDate.of(2025, 2, 5), // date
