@@ -4,6 +4,7 @@ import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.service.ISocialMeliService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
@@ -56,13 +57,13 @@ public class SocialMeliController {
 
     //UH 5
     @PostMapping("/products/post")
-    public ResponseEntity<PostResponseDto> postPost(@RequestBody PostRequestDto post) {
+    public ResponseEntity<PostResponseDto> createPost(@Valid @RequestBody PostRequestDto post) {
         return new ResponseEntity<>(socialMeliService.createPost(post), HttpStatus.OK);
     }
 
     //UH 10
     @PostMapping("/products/promo-post")
-    public ResponseEntity<PostResponseDto> postPromoPost(@RequestBody PostRequestDto post) {
+    public ResponseEntity<PostResponseDto> createPromoPost(@Valid @RequestBody PostRequestDto post) {
         return new ResponseEntity<>(socialMeliService.createPost(post), HttpStatus.OK);
     }
 
