@@ -22,5 +22,5 @@ public interface IUserRepository {
     List<Buyer> getFollowers(int sellerId);
     List<Integer> getAllSellersId();
     List<Seller> getSellersByRangePrice(Double minPrice, Double maxPrice, String product);
-    List<Post> findPostsFromSellerByUserIdWithLimitDate(Integer userId, LocalDate limitDate, String order);
+    List<Post> findPostsFromSellerByUserIdWithLimitDate(Integer userId, LocalDate limitDate);
 }

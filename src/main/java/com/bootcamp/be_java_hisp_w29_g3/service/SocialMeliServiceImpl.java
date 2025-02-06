@@ -1,7 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
-import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.UserDTO;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
@@ -74,6 +74,7 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         userRepository.unfollowSeller(userId,userIdToUnfollow);
         return new UnfollowDto("El usuario ya no sigue al vendedor");
     }
+
 
     @Override
     public BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order) {
@@ -177,19 +178,32 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
 
     @Override
     public PostsByUserResponseDto searchPostsByUserIdInLastTwoWeeks(Integer userId, String order) {
+        if(!userRepository.existsBuyerById(userId))
+            throw new NotFoundException("No existe el usuario");
+
         List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId);
         if(sellers.isEmpty())
             throw new NotFoundException("El usuario no sigue vendedores");
 
         LocalDate limitDate = LocalDate.now().minusWeeks(2);
 
-        List<Post> posts = userRepository.findPostsFromSellerByUserIdWithLimitDate(userId, limitDate, order);
+        List<Post> posts = userRepository
+                .findPostsFromSellerByUserIdWithLimitDate(userId, limitDate)
+                .stream().sorted(getPostDateComparator(order))
+                .toList();
 
         if(posts.isEmpty()) {
             throw new NotFoundException("No hay posts para mostrar");
         }
         List<PostByUserDto> postsDto = MapperUtil.mapToPostByUserResponseDto(posts, userId);
         return new PostsByUserResponseDto(userId, postsDto);
+    }
+
+    private Comparator<Post> getPostDateComparator(String order){
+        if(order.equalsIgnoreCase("date_desc")) {
+            return Comparator.comparing(Post::getDate).reversed();
+        }
+        return Comparator.comparing(Post::getDate);
     }
 
     @Override

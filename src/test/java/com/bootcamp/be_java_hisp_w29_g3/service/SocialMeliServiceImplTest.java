@@ -1,13 +1,10 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.UnfollowDto;
-import com.bootcamp.be_java_hisp_w29_g3.dto.response.UserFollowersDTO;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.*;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
-import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
-import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Post;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Product;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
@@ -19,19 +16,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SocialMeliServiceImplTest {
-
     @Mock
     IUserRepository userRepository;
 
@@ -329,6 +324,7 @@ class SocialMeliServiceImplTest {
         assertEquals("Guido", result.getFollowers().get(0).getUserName());
         assertEquals("Juan", result.getFollowers().get(1).getUserName());
         assertEquals("Lucas", result.getFollowers().get(2).getUserName());
+
     }
 
     @Test
@@ -399,5 +395,50 @@ class SocialMeliServiceImplTest {
         assertEquals("Lucas", result.getFollowed().get(0).getUserName());
         assertEquals("Juan", result.getFollowed().get(1).getUserName());
         assertEquals("Guido", result.getFollowed().get(2).getUserName());
+    }
+
+    @Test
+    @DisplayName("US-0009 - Ordenamiento Descendente (T-0005) y (T-0006)")
+    void searchPostsByUserIdInLastTwoWeeksOrderDescOK() {
+        //Arrange
+        List<Seller> sellers = List.of(Seller.builder().build());
+        List<Post> orderedPosts = List.of(
+                new Post(1, LocalDate.now(), new Product(), null, null, null, null),
+                new Post(2, LocalDate.now().minusDays(2), new Product(), null, null, null, null)
+        );
+
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
+        when(userRepository.getSellersFollowedByBuyer(anyInt())).thenReturn(sellers);
+        when(userRepository.findPostsFromSellerByUserIdWithLimitDate(anyInt(), any(LocalDate.class))).thenReturn(orderedPosts);
+
+        //Act
+        PostsByUserResponseDto response = socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_desc");
+
+        //Assert
+        assertEquals(1, response.getPosts().getFirst().getPostId());
+        assertEquals(2, response.getPosts().getLast().getPostId());
+    }
+
+    @Test
+    @DisplayName("US-0009 - Ordenamiento Ascendente (T-0006)")
+    void searchPostsByUserIdInLastTwoWeeksOrderAscOK() {
+        //Arrange
+        List<Seller> sellers = List.of(Seller.builder().build());
+        List<Post> orderedPosts = List.of(
+                new Post(1, LocalDate.now(), new Product(), null, null, null, null),
+                new Post(2, LocalDate.now().minusDays(2), new Product(), null, null, null, null)
+        );
+
+        when(userRepository.existsBuyerById(anyInt())).thenReturn(true);
+        when(userRepository.getSellersFollowedByBuyer(anyInt())).thenReturn(sellers);
+        when(userRepository.findPostsFromSellerByUserIdWithLimitDate(anyInt(), any(LocalDate.class))).thenReturn(orderedPosts);
+
+        //Act
+        PostsByUserResponseDto response = socialMeliService.searchPostsByUserIdInLastTwoWeeks(1, "date_asc");
+
+        //Assert
+        assertEquals(2, response.getPosts().getFirst().getPostId());
+        assertEquals(1, response.getPosts().getLast().getPostId());
+
     }
 }
