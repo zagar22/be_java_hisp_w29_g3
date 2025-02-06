@@ -1,11 +1,18 @@
 package com.bootcamp.be_java_hisp_w29_g3.integration;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.ProductRequestDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,6 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SocialMeliControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
 
     @Test
     @Order(1)
@@ -166,6 +177,95 @@ public class SocialMeliControllerIntegrationTest {
                         .andExpect(jsonPath("$.followers[0].user_name").value("Comprador X"))
                         .andExpect(jsonPath("$.followers[1].user_id").value(3))
                         .andExpect(jsonPath("$.followers[1].user_name").value("Comprador Z"));
+    }
+    @Test
+    @DisplayName("US-0005 - Crear un post")
+    void createPostTest() throws Exception{
+        PostRequestDto postRequestDto = new PostRequestDto(
+                1,
+                LocalDate.of(2025, 2, 5),
+                new ProductRequestDto(
+                        1,
+                        "Producto A",
+                        "Electronico",
+                        "Marca A",
+                        "Rojo",
+                        "Notas sobre el producto"
+                ),
+                10,
+                5000.0,
+                false,
+                0.0
+        );
+
+        String jsonRequest = objectMapper.writeValueAsString(postRequestDto);
+        mockMvc.perform(post("/products/post")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hasProm").doesNotExist())
+                .andExpect(jsonPath("$.discount").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("US-0005 - Crear un post con datos inválidos (precio mayor que el máximo permitido)")
+    void createPostTest_InvalidPrice() throws Exception {
+        PostRequestDto postRequestDto = new PostRequestDto(
+                1,
+                LocalDate.of(2025, 2, 5),
+                new ProductRequestDto(
+                        1,
+                        "Producto A",
+                        "Electrónico",
+                        "Marca A",
+                        "Rojo",
+                        "Notas sobre el producto"
+                ),
+                10,
+                15000000.0,
+                false,
+                null
+        );
+
+        String jsonRequest = objectMapper.writeValueAsString(postRequestDto);
+
+        mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                        .andDo(print())
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$.price").value("El precio máximo permitido es 10,000,000."));
+    }
+
+    @Test
+    @DisplayName("US-0010 - crear un post con promocion")
+    void createPromoPostTest() throws Exception{
+        PostRequestDto postRequestDto = new PostRequestDto(
+                2,
+                LocalDate.of(2025, 2, 5), // date
+                new ProductRequestDto(
+                        1,
+                        "Producto A",
+                        "Electronico",
+                        "Marca A",
+                        "Rojo",
+                        "Notas sobre el producto"
+                ),
+                10,
+                5000.0,
+                true,
+                20.0
+        );
+
+        String jsonRequest = objectMapper.writeValueAsString(postRequestDto);
+        mockMvc.perform(post("/products/promo-post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.has_prom").value(true))
+                .andExpect(jsonPath("$.discount").value(20.0));
     }
 
     @Test
