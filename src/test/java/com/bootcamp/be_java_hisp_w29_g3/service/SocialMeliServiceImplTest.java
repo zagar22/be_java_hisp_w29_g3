@@ -1,8 +1,12 @@
 package com.bootcamp.be_java_hisp_w29_g3.service;
 
+import com.bootcamp.be_java_hisp_w29_g3.dto.request.BuyerFollowedSellersDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.UnfollowDto;
+import com.bootcamp.be_java_hisp_w29_g3.dto.response.UserFollowersDTO;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
+import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Buyer;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
 import com.bootcamp.be_java_hisp_w29_g3.exception.BadRequestException;
@@ -14,6 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,6 +177,7 @@ class SocialMeliServiceImplTest {
         //assert
         assertEquals(expected,obtained);
     }
+
     @DisplayName("US-0002 - Seller not found (T-0007)")
     @Test
     void calculateSellerFollowerCountNotFound(){
@@ -204,5 +213,189 @@ class SocialMeliServiceImplTest {
         assertEquals(expected,obtained);
     }
 
+    @Test
+    @DisplayName("T-0003 - Verificar que el ordenamiento alfabético válido funciona correctamente")
+    public void testGetFollowersWithValidOrder() {
+        // Arrange
+        List<Buyer> mockFollowerList = Arrays.asList(
+                Buyer.builder().id(2).name("Lucas").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(3).name("Guido").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(4).name("Juan").sellers(new ArrayList<>()).build()
+        );
 
+        when(userRepository.existsSellerById(1)).thenReturn(true);
+        when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
+
+        // Act
+        UserFollowersDTO resultAsc = socialMeliService.getSellerFollowers(1, "name_asc");
+        UserFollowersDTO resultDesc = socialMeliService.getSellerFollowers(1, "name_desc");
+
+        // Assert - Verificar orden ascendente
+        assertEquals("Guido", resultAsc.getFollowers().get(0).getUserName());
+        assertEquals("Juan", resultAsc.getFollowers().get(1).getUserName());
+        assertEquals("Lucas", resultAsc.getFollowers().get(2).getUserName());
+
+        // Assert - Verificar orden descendente
+        assertEquals("Lucas", resultDesc.getFollowers().get(0).getUserName());
+        assertEquals("Juan", resultDesc.getFollowers().get(1).getUserName());
+        assertEquals("Guido", resultDesc.getFollowers().get(2).getUserName());
+    }
+
+    @Test
+    @DisplayName("T-0003 - Verificar que se lanza una excepción con ordenamiento inválido")
+    public void testGetFollowersWithInvalidOrder() {
+        // Arrange
+        List<Buyer> mockFollowerList = Arrays.asList(
+                Buyer.builder().id(2).name("Lucas").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(3).name("Guido").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(4).name("Juan").sellers(new ArrayList<>()).build()
+        );
+
+        when(userRepository.existsSellerById(1)).thenReturn(true);
+        when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
+
+        // Assert
+        assertThrows(BadRequestException.class, () -> socialMeliService.getSellerFollowers(1, "invalid_order"));
+    }
+
+    @Test
+    @DisplayName("T-0003 - Verificar que el ordenamiento alfabético válido funciona correctamente en usuarios seguidos")
+    public void testGetFollowedSellersWithValidOrder() {
+        // Arrange
+        List<Seller> mockFollowedSellers = Arrays.asList(
+                Seller.builder().id(2).name("Lucas").build(),
+                Seller.builder().id(3).name("Guido").build(),
+                Seller.builder().id(4).name("Juan").build()
+        );
+
+        Buyer mockBuyer = Buyer.builder().id(1).name("Carlos").sellers(mockFollowedSellers).build();
+
+        when(userRepository.getBuyerById(1)).thenReturn(mockBuyer);
+        when(userRepository.getSellersFollowedByBuyer(1)).thenReturn(mockFollowedSellers);
+
+        // Act
+        BuyerFollowedSellersDto resultAsc = socialMeliService.getUserFollowSellers(1, "name_asc");
+        BuyerFollowedSellersDto resultDesc = socialMeliService.getUserFollowSellers(1, "name_desc");
+
+        // Assert - Verificar orden ascendente
+        assertEquals("Guido", resultAsc.getFollowed().get(0).getUserName());
+        assertEquals("Juan", resultAsc.getFollowed().get(1).getUserName());
+        assertEquals("Lucas", resultAsc.getFollowed().get(2).getUserName());
+
+        // Assert - Verificar orden descendente
+        assertEquals("Lucas", resultDesc.getFollowed().get(0).getUserName());
+        assertEquals("Juan", resultDesc.getFollowed().get(1).getUserName());
+        assertEquals("Guido", resultDesc.getFollowed().get(2).getUserName());
+    }
+
+    @Test
+    @DisplayName("T-0003 - Verificar que se lanza una excepción con ordenamiento inválido en usuarios seguidos")
+    public void testGetFollowedSellersWithInvalidOrder() {
+        // Arrange
+        List<Seller> mockFollowedSellers = Arrays.asList(
+                Seller.builder().id(2).name("Lucas").build(),
+                Seller.builder().id(3).name("Guido").build(),
+                Seller.builder().id(4).name("Juan").build()
+        );
+
+        Buyer mockBuyer = Buyer.builder().id(1).name("Carlos").sellers(mockFollowedSellers).build();
+
+        when(userRepository.getBuyerById(1)).thenReturn(mockBuyer);
+        when(userRepository.getSellersFollowedByBuyer(1)).thenReturn(mockFollowedSellers);
+
+        // Assert
+        assertThrows(BadRequestException.class, () -> socialMeliService.getUserFollowSellers(1, "invalid_order"));
+    }
+
+    @Test
+    @DisplayName("T-0004 - Validar el ordenamiento ascendente en seguidores")
+    public void testGetFollowersWithAscendingOrder() {
+        // Arrange
+        List<Buyer> mockFollowerList = Arrays.asList(
+                Buyer.builder().id(2).name("Lucas").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(3).name("Guido").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(4).name("Juan").sellers(new ArrayList<>()).build()
+        );
+
+        when(userRepository.existsSellerById(1)).thenReturn(true);
+        when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
+
+        // Act
+        UserFollowersDTO result = socialMeliService.getSellerFollowers(1, "name_asc");
+
+        // Assert - Verificar orden ascendente
+        assertEquals("Guido", result.getFollowers().get(0).getUserName());
+        assertEquals("Juan", result.getFollowers().get(1).getUserName());
+        assertEquals("Lucas", result.getFollowers().get(2).getUserName());
+    }
+
+    @Test
+    @DisplayName("T-0004 - Validar el ordenamiento descendente en seguidores")
+    public void testGetFollowersWithDescendingOrder() {
+        // Arrange
+        List<Buyer> mockFollowerList = Arrays.asList(
+                Buyer.builder().id(2).name("Lucas").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(3).name("Guido").sellers(new ArrayList<>()).build(),
+                Buyer.builder().id(4).name("Juan").sellers(new ArrayList<>()).build()
+        );
+
+        when(userRepository.existsSellerById(1)).thenReturn(true);
+        when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
+
+        // Act
+        UserFollowersDTO result = socialMeliService.getSellerFollowers(1, "name_desc");
+
+        // Assert - Verificar orden descendente
+        assertEquals("Lucas", result.getFollowers().get(0).getUserName());
+        assertEquals("Juan", result.getFollowers().get(1).getUserName());
+        assertEquals("Guido", result.getFollowers().get(2).getUserName());
+    }
+
+    @Test
+    @DisplayName("T-0004 - Validar el ordenamiento ascendente en usuarios seguidos")
+    public void testGetFollowedSellersWithAscendingOrder() {
+        // Arrange
+        List<Seller> mockFollowedSellers = Arrays.asList(
+                Seller.builder().id(2).name("Lucas").build(),
+                Seller.builder().id(3).name("Guido").build(),
+                Seller.builder().id(4).name("Juan").build()
+        );
+
+        Buyer mockBuyer = Buyer.builder().id(1).name("Carlos").sellers(mockFollowedSellers).build();
+
+        when(userRepository.getBuyerById(1)).thenReturn(mockBuyer);
+        when(userRepository.getSellersFollowedByBuyer(1)).thenReturn(mockFollowedSellers);
+
+        // Act
+        BuyerFollowedSellersDto result = socialMeliService.getUserFollowSellers(1, "name_asc");
+
+        // Assert - Verificar orden ascendente
+        assertEquals("Guido", result.getFollowed().get(0).getUserName());
+        assertEquals("Juan", result.getFollowed().get(1).getUserName());
+        assertEquals("Lucas", result.getFollowed().get(2).getUserName());
+    }
+
+    @Test
+    @DisplayName("T-0004 - Validar el ordenamiento descendente en usuarios seguidos")
+    public void testGetFollowedSellersWithDescendingOrder() {
+        // Arrange
+        List<Seller> mockFollowedSellers = Arrays.asList(
+                Seller.builder().id(2).name("Lucas").build(),
+                Seller.builder().id(3).name("Guido").build(),
+                Seller.builder().id(4).name("Juan").build()
+        );
+
+        Buyer mockBuyer = Buyer.builder().id(1).name("Carlos").sellers(mockFollowedSellers).build();
+
+        when(userRepository.getBuyerById(1)).thenReturn(mockBuyer);
+        when(userRepository.getSellersFollowedByBuyer(1)).thenReturn(mockFollowedSellers);
+
+        // Act
+        BuyerFollowedSellersDto result = socialMeliService.getUserFollowSellers(1, "name_desc");
+
+        // Assert - Verificar orden descendente
+        assertEquals("Lucas", result.getFollowed().get(0).getUserName());
+        assertEquals("Juan", result.getFollowed().get(1).getUserName());
+        assertEquals("Guido", result.getFollowed().get(2).getUserName());
+    }
 }
