@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w29_g3.integration;
 
 import com.bootcamp.be_java_hisp_w29_g3.dto.response.PromoProductDto;
 import com.bootcamp.be_java_hisp_w29_g3.entity.Seller;
+import com.bootcamp.be_java_hisp_w29_g3.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,7 +25,7 @@ public class SocialMeliControllerIntegrationTest {
     MockMvc mockMvc;
 
     @Test
-    @DisplayName("US-0011")
+    @DisplayName("US-0011 (Productos con descuento)")
     void getPromoProductsTest() throws Exception {
         Integer userId = 1;
         mockMvc.perform(get("/products/promo-post/count")
@@ -37,7 +39,16 @@ public class SocialMeliControllerIntegrationTest {
                 .andExpect(jsonPath("$.promo_products_count").value(1L));
     }
 
-
+    @Test
+    @DisplayName("US-0011 (Productos con descuento) no encuentra el id")
+    void getPromoProductsBadTest() throws Exception {
+        Integer userId = 9887;
+        mockMvc.perform(get("/products/promo-post/count")
+                        .param("user_id", String.valueOf(userId))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
     @DisplayName("US-0002 - Happy path")
     @Test
@@ -82,7 +93,7 @@ public class SocialMeliControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("UH-4: DESC")
+    @DisplayName("UH-4: DESC (lista de seguidores del comprador)")
     void getSellersFollowedByBuyerTestDESC() throws Exception {
         Integer userId = 1;
         String order = "name_desc";
@@ -105,7 +116,7 @@ public class SocialMeliControllerIntegrationTest {
     @DisplayName("UH-4: ASC")
     void getSellersFollowedByBuyerTestASC() throws Exception {
         Integer userId = 1;
-        String order = "asc";
+        String order = "name_asc";
 
         mockMvc.perform(get("/users/{userId}/followed/list", userId)
                         .param("order", order)
