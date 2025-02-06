@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository {
-    private Map<Integer, Seller> sellers = new HashMap<>();
-    private Map<Integer, Buyer> buyers = new HashMap<>();
+    private final Map<Integer, Seller> sellers = new HashMap<>();
+    private final Map<Integer, Buyer> buyers = new HashMap<>();
 
     public UserRepositoryImpl() {
         loadDB();
