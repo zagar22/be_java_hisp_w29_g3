@@ -73,7 +73,7 @@ public class SocialMeliControllerIntegrationTest {
 
 
     @Test
-    @DisplayName("US-0001")
+    @DisplayName("US-0001 - Happy Path")
     void followSellerTest() throws Exception{
         mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}",2, 1))
                 .andExpect(status().isOk())
@@ -82,12 +82,30 @@ public class SocialMeliControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("US-0007")
+    @DisplayName("US-0001 - NotFound Exception when Buyer not exist")
+    void unfollowSellerNotFoundWhenBuyerNotExistTest() throws Exception{
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}",30, 2))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("No existe el usuario"));
+    }
+
+    @Test
+    @DisplayName("US-0007 - Happy Path")
     void unfollowSellerTest() throws Exception{
         mockMvc.perform(post("/users/{userId}/unfollow/{userIdToUnfollow}",1, 2))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("El usuario ya no sigue al vendedor"));
+    }
+
+    @Test
+    @DisplayName("US-0007 - NotFound Exception when Seller not exist")
+    void unfollowSellerNotFoundWhenSellerNotExistTest() throws Exception{
+        mockMvc.perform(post("/users/{userId}/unfollow/{userIdToUnfollow}",1, 50))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("No existe el vendedor"));
     }
 
     @Test
