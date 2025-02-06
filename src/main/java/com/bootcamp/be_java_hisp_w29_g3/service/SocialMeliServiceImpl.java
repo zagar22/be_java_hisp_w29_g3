@@ -143,16 +143,24 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
 
     @Override
     public UserFollowersDTO getSellerFollowers(Integer sellerId, String order) {
+
+        Seller seller = userRepository.getSellerById(sellerId);
+
+        if (seller == null) {
+            throw new NotFoundException("No existe el vendedor");
+        }
+
         if (!userRepository.existsSellerById(sellerId)) {
             throw new NotFoundException("No existe el vendedor");
         }
+
         List<UserDTO> followers = userRepository.getFollowers(sellerId).stream()
                                                 .map(buyer -> new UserDTO(buyer.getId(), buyer.getName()))
                                                 .collect(Collectors.toList());
 
         followers = sortList(followers, order, UserDTO::getUserName);
 
-        return new UserFollowersDTO(sellerId, followers);
+        return new UserFollowersDTO(sellerId, seller.getName(),followers);
     }
 
     private <T> List<T> sortList(List<T> list, String order, Function<T, String> getField) {
