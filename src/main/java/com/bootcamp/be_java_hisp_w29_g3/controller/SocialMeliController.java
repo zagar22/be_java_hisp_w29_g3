@@ -68,8 +68,8 @@ public class SocialMeliController {
 
     //UH 3 y 8
     @GetMapping("/{userId}/followers/list")
-    public ResponseEntity<UserFollowersDTO> getFollowers(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId, @RequestParam(required = false, defaultValue = "") String order) {
-        return new ResponseEntity<>(socialMeliService.getFollowers(userId, order), HttpStatus.OK);
+    public ResponseEntity<UserFollowersDTO> getSellerFollowers(@PathVariable @Positive(message = "El id debe ser mayor a 0")  Integer userId, @RequestParam(required = false, defaultValue = "") String order) {
+        return new ResponseEntity<>(socialMeliService.getSellerFollowers(userId, order), HttpStatus.OK);
     }
 
     //UH 6 y 9

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.bootcamp.be_java_hisp_w29_g3.util.MapperUtil.mapToPost;
@@ -74,22 +75,27 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         return new UnfollowDto("El usuario ya no sigue al vendedor");
     }
 
-
     @Override
     public BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order) {
         Buyer buyer = userRepository.getBuyerById(buyerId);
-        if (buyer == null){
+
+        if (buyer == null) {
             throw new NotFoundException("No existe el usuario");
         }
-        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(buyerId, order);
-        if (sellers.isEmpty()){
+
+        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(buyerId);
+
+        if (sellers.isEmpty()) {
             throw new NotFoundException("El usuario no sigue vendedores");
         }
+
+        sellers = sortList(sellers, order, Seller::getName);
+
         List<SellerFollowDto> followedSellers = sellers.stream()
-                .map(seller -> new SellerFollowDto(seller.getId(),seller.getName()))
+                .map(seller -> new SellerFollowDto(seller.getId(), seller.getName()))
                 .collect(Collectors.toList());
 
-        return new BuyerFollowedSellersDto(buyer.getId(),buyer.getName(),followedSellers);
+        return new BuyerFollowedSellersDto(buyer.getId(), buyer.getName(), followedSellers);
     }
 
     @Override
@@ -134,19 +140,44 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
         }
     }
 
-    public UserFollowersDTO getFollowers(Integer sellerId, String order) {
+    @Override
+    public UserFollowersDTO getSellerFollowers(Integer sellerId, String order) {
         if (!userRepository.existsSellerById(sellerId)) {
             throw new NotFoundException("No existe el vendedor");
         }
-        List<UserDTO> followers = userRepository.getFollowers(sellerId, order).stream()
+        List<UserDTO> followers = userRepository.getFollowers(sellerId).stream()
                                                 .map(buyer -> new UserDTO(buyer.getId(), buyer.getName()))
                                                 .collect(Collectors.toList());
+
+        followers = sortList(followers, order, UserDTO::getUserName);
+
         return new UserFollowersDTO(sellerId, followers);
+    }
+
+    private <T> List<T> sortList(List<T> list, String order, Function<T, String> getField) {
+        if (order == null || order.isEmpty()) {
+            return list;
+        }
+
+        switch (order.toLowerCase()) {
+            case "name_asc":
+                return list.stream()
+                           .sorted(Comparator.comparing(getField))
+                           .collect(Collectors.toList());
+
+            case "name_desc":
+                return list.stream()
+                           .sorted(Comparator.comparing(getField).reversed())
+                           .collect(Collectors.toList());
+
+            default:
+                throw new BadRequestException("Orden no válido: " + order);
+        }
     }
 
     @Override
     public PostsByUserResponseDto searchPostsByUserIdInLastTwoWeeks(Integer userId, String order) {
-        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId,null);
+        List<Seller> sellers = userRepository.getSellersFollowedByBuyer(userId);
         if(sellers.isEmpty())
             throw new NotFoundException("El usuario no sigue vendedores");
 

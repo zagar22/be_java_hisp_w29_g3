@@ -38,6 +38,7 @@ public class SocialMeliControllerIntegrationTest {
     }
 
 
+
     @DisplayName("US-0002 - Happy path")
     @Test
     void getSellerFollowerCountTest() throws Exception {

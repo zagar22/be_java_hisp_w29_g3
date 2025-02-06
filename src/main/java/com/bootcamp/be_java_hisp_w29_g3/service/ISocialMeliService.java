@@ -11,7 +11,7 @@ public interface ISocialMeliService {
     UnfollowDto unfollowSeller(Integer userId, Integer userIdToUnfollow);
     BuyerFollowedSellersDto getUserFollowSellers(Integer buyerId, String order);
     PromoProductDto getPromoProducts(Integer userId);
-    UserFollowersDTO getFollowers(Integer sellerId, String order);
+    UserFollowersDTO getSellerFollowers(Integer sellerId, String order);
     PostResponseDto createPost(PostRequestDto post);
     FollowerCountDTO calculateSellerFollowerCount(Integer sellerId);
     List<FollowerCountDTO> getSellersByFollowerCount();
