@@ -1,5 +1,7 @@
 package com.bootcamp.be_java_hisp_w29_g3.integration;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.ProductRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SocialMeliControllerIntegrationTest {
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     @Test
@@ -138,7 +143,7 @@ public class SocialMeliControllerIntegrationTest {
     @DisplayName("UH-4: ASC")
     void getSellersFollowedByBuyerTestASC() throws Exception {
         Integer userId = 1;
-        String order = "asc";
+        String order = "name_asc";
 
         mockMvc.perform(get("/users/{userId}/followed/list", userId)
                         .param("order", order)
@@ -176,14 +181,13 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     @DisplayName("US-0005 - Crear un post")
     void createPostTest() throws Exception{
-        ObjectMapper objectMapper = new ObjectMapper();
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
-                LocalDate.of(2025, 2, 5), // date
+                LocalDate.of(2025, 2, 5),
                 new ProductRequestDto(
                         1,
                         "Producto A",
-                        "Electrónico",
+                        "Electronico",
                         "Marca A",
                         "Rojo",
                         "Notas sobre el producto"
@@ -207,8 +211,6 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     @DisplayName("US-0005 - Crear un post con datos inválidos (precio mayor que el máximo permitido)")
     void createPostTest_InvalidPrice() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-
         PostRequestDto postRequestDto = new PostRequestDto(
                 1,
                 LocalDate.of(2025, 2, 5),
@@ -239,14 +241,13 @@ public class SocialMeliControllerIntegrationTest {
     @Test
     @DisplayName("US-0010 - crear un post con promocion")
     void createPromoPostTest() throws Exception{
-        ObjectMapper objectMapper = new ObjectMapper();
         PostRequestDto postRequestDto = new PostRequestDto(
-                1,
+                2,
                 LocalDate.of(2025, 2, 5), // date
                 new ProductRequestDto(
                         1,
                         "Producto A",
-                        "Electrónico",
+                        "Electronico",
                         "Marca A",
                         "Rojo",
                         "Notas sobre el producto"
