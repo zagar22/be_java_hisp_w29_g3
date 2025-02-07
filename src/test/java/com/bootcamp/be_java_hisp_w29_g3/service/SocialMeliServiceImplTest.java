@@ -211,6 +211,30 @@ class SocialMeliServiceImplTest {
     }
 
     @Test
+    @DisplayName("US-0008 - Validar el ordenamiento descendente en usuarios seguidos (T-0004)")
+    public void testGetFollowedSellersWithDescendingOrder() {
+        // Arrange
+        List<Seller> mockFollowedSellers = Arrays.asList(
+                Seller.builder().id(2).name("Lucas").build(),
+                Seller.builder().id(3).name("Guido").build(),
+                Seller.builder().id(4).name("Juan").build()
+        );
+
+        Buyer mockBuyer = Buyer.builder().id(1).name("Carlos").sellers(mockFollowedSellers).build();
+
+        when(userRepository.getBuyerById(1)).thenReturn(mockBuyer);
+        when(userRepository.getSellersFollowedByBuyer(1)).thenReturn(mockFollowedSellers);
+
+        // Act
+        BuyerFollowedSellersDto result = socialMeliService.getUserFollowSellers(1, "name_desc");
+
+        // Assert - Verificar orden descendente
+        assertEquals("Lucas", result.getFollowed().get(0).getUserName());
+        assertEquals("Juan", result.getFollowed().get(1).getUserName());
+        assertEquals("Guido", result.getFollowed().get(2).getUserName());
+    }
+
+    @Test
     @DisplayName("US-0008 - Verificar que el ordenamiento alfabético válido funciona correctamente (T-0003)")
     public void testGetFollowersWithValidOrder() {
         // Arrange
@@ -226,8 +250,6 @@ class SocialMeliServiceImplTest {
                 .posts(new ArrayList<>())
                 .build();
 
-        // mockeamos que el vendedor existe y tiene seguidores
-        when(userRepository.existsSellerById(1)).thenReturn(true);
         when(userRepository.getSellerById(1)).thenReturn(mockSeller);
         when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
 
@@ -262,12 +284,10 @@ class SocialMeliServiceImplTest {
                 .posts(new ArrayList<>())
                 .build();
 
-        // mockeamos que el vendedor existe y tiene seguidores
-        when(userRepository.existsSellerById(1)).thenReturn(true);
         when(userRepository.getSellerById(1)).thenReturn(mockSeller);
         when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
 
-        // Assert - verificamos que al pasar un orden invalido tira excepción
+        // Assert - verificamos que al pasar un orden inválido tira excepción
         assertThrows(BadRequestException.class, () -> socialMeliService.getSellerFollowers(1, "invalid_order"));
     }
 
@@ -336,8 +356,6 @@ class SocialMeliServiceImplTest {
                 .posts(new ArrayList<>())
                 .build();
 
-        // mockeamos que el vendedor existe y tiene seguidores
-        when(userRepository.existsSellerById(1)).thenReturn(true);
         when(userRepository.getSellerById(1)).thenReturn(mockSeller);
         when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
 
@@ -348,7 +366,6 @@ class SocialMeliServiceImplTest {
         assertEquals("Guido", result.getFollowers().get(0).getUserName());
         assertEquals("Juan", result.getFollowers().get(1).getUserName());
         assertEquals("Lucas", result.getFollowers().get(2).getUserName());
-
     }
 
     @Test
@@ -368,7 +385,6 @@ class SocialMeliServiceImplTest {
                 .build();
 
         // mockeamos que el vendedor existe y tiene seguidores
-        when(userRepository.existsSellerById(1)).thenReturn(true);
         when(userRepository.getSellerById(1)).thenReturn(mockSeller);
         when(userRepository.getFollowers(1)).thenReturn(mockFollowerList);
 
@@ -403,30 +419,6 @@ class SocialMeliServiceImplTest {
         assertEquals("Guido", result.getFollowed().get(0).getUserName());
         assertEquals("Juan", result.getFollowed().get(1).getUserName());
         assertEquals("Lucas", result.getFollowed().get(2).getUserName());
-    }
-
-    @Test
-    @DisplayName("US-0008 - Validar el ordenamiento descendente en usuarios seguidos (T-0004)")
-    public void testGetFollowedSellersWithDescendingOrder() {
-        // Arrange
-        List<Seller> mockFollowedSellers = Arrays.asList(
-                Seller.builder().id(2).name("Lucas").build(),
-                Seller.builder().id(3).name("Guido").build(),
-                Seller.builder().id(4).name("Juan").build()
-        );
-
-        Buyer mockBuyer = Buyer.builder().id(1).name("Carlos").sellers(mockFollowedSellers).build();
-
-        when(userRepository.getBuyerById(1)).thenReturn(mockBuyer);
-        when(userRepository.getSellersFollowedByBuyer(1)).thenReturn(mockFollowedSellers);
-
-        // Act
-        BuyerFollowedSellersDto result = socialMeliService.getUserFollowSellers(1, "name_desc");
-
-        // Assert - Verificar orden descendente
-        assertEquals("Lucas", result.getFollowed().get(0).getUserName());
-        assertEquals("Juan", result.getFollowed().get(1).getUserName());
-        assertEquals("Guido", result.getFollowed().get(2).getUserName());
     }
 
     @Test
