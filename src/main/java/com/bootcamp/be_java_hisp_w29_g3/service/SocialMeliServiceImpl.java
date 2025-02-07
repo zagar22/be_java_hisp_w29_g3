@@ -150,10 +150,6 @@ public class SocialMeliServiceImpl implements ISocialMeliService {
             throw new NotFoundException("No existe el vendedor");
         }
 
-        if (!userRepository.existsSellerById(sellerId)) {
-            throw new NotFoundException("No existe el vendedor");
-        }
-
         List<UserDTO> followers = userRepository.getFollowers(sellerId).stream()
                                                 .map(buyer -> new UserDTO(buyer.getId(), buyer.getName()))
                                                 .collect(Collectors.toList());
