@@ -1,7 +1,5 @@
 package com.bootcamp.be_java_hisp_w29_g3.integration;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.PostRequestDto;
 import com.bootcamp.be_java_hisp_w29_g3.dto.request.ProductRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
